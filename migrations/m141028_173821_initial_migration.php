@@ -14,7 +14,7 @@ class m141028_173821_initial_migration extends Migration
             'bill_lname' => Schema::TYPE_STRING . ' NOT NULL',
             'bill_email' => Schema::TYPE_STRING . ' NOT NULL',
             'amount' => Schema::TYPE_DECIMAL . ' NOT NULL DEFAULT 0.0',
-            'date' => Schema::TYPE_DATETIME . ' NOT NULL DEFAULT NOW()',
+            'date' => Schema::TYPE_DATETIME . ' NOT NULL DEFAULT DATETIME(NOW())',
 
         ]);
 
@@ -23,7 +23,10 @@ class m141028_173821_initial_migration extends Migration
             'name' => Schema::TYPE_STRING . ' NOT NULL',
             'desc' => Schema::TYPE_TEXT . ' NOT NULL',
             'price' => Schema::TYPE_DECIMAL . ' NOT NULL',
-            'img' => Schema::TYPE_STRING . ' NOT NULL DEFAULT ""'
+            'img' => Schema::TYPE_STRING . ' NOT NULL DEFAULT ""',
+            'orders' => Schema::TYPE_INTEGER . ' NOT NULL DEFAULT 0',
+            'carts' => Schema::TYPE_INTEGER . ' NOT NULL DEFAULT 0',
+            'views' => Schema::TYPE_INTEGER . ' NOT NULL DEFAULT 0',
         ]);
 
         $this->createTable('ordered_product', [
@@ -32,7 +35,7 @@ class m141028_173821_initial_migration extends Migration
             'order_id' => Schema::TYPE_INTEGER . ' NOT NULL',
             'product_id' => Schema::TYPE_INTEGER . ' NOT NULL',
             'quantity' => Schema::TYPE_INTEGER . ' NOT NULL DEFAULT 1',
-            'date' => Schema::TYPE_DATETIME . ' NOT NULL DEFAULT NOW()',
+            'date' => Schema::TYPE_DATETIME . ' NOT NULL DEFAULT DATETIME(NOW())',
         ]);
 
         $this->createTable('carted_product', [
@@ -40,14 +43,14 @@ class m141028_173821_initial_migration extends Migration
             'track_id' => Schema::TYPE_INTEGER . ' NOT NULL',
             'product_id' => Schema::TYPE_INTEGER . ' NOT NULL',
             'quantity' => Schema::TYPE_INTEGER . ' NOT NULL DEFAULT 1',
-            'date' => Schema::TYPE_DATETIME . ' NOT NULL DEFAULT NOW()',
+            'date' => Schema::TYPE_DATETIME . ' NOT NULL DEFAULT DATETIME(NOW())',
 
         ]);
         $this->createTable('viewed_product', [
             'id' => 'pk',
             'track_id' => Schema::TYPE_INTEGER . ' NOT NULL',
             'product_id' => Schema::TYPE_INTEGER . ' NOT NULL',
-            'date' => Schema::TYPE_DATETIME . ' NOT NULL DEFAULT NOW()',
+            'date' => Schema::TYPE_DATETIME . ' NOT NULL DEFAULT DATETIME(NOW())',
         ]);
     }
 
