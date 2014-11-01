@@ -57,4 +57,17 @@ class Product extends ActiveRecord
             'views' => 'Views',
         ];
     }
+
+    public static function getAll($offset = 0, $count=20)
+    {
+        $query = self::find();
+        $query->orderBy([
+            'orders' => 'desc',
+            'views' => 'desc',
+            'carts' => 'desc',
+        ]);
+        $query->offset = $offset;
+        $query->limit = $count;
+        return $query->all();
+    }
 }

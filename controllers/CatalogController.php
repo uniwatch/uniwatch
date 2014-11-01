@@ -2,24 +2,30 @@
 
 namespace app\controllers;
 
-use \yii\web\Controller;
+use app\models\Product;
 
-class OrderController extends Controller
+class CatalogController extends \yii\web\Controller
 {
-    public $layout = 'with_menu';
+    public $layout = false;
 
-    public function actionCart()
+    public $defaultAction = 'list';
+    public function actionHome()
     {
-
+        $this->layout = false;
+        $data = Product::getAll(0, 20);
+        return $this->render('list',['items'=>$data]);
+    }
+    public function actionList($page = 1, $name = '', $category = null, $priceFrom = null, $priceTo = null)
+    {
+        $data = Product::getProducts(
+            $page,
+            20,
+            $category,
+            $name,
+            $priceFrom,
+            $priceTo
+        );
+        return $this->render('list',['items'=>$data]);
     }
 
-    public function actionCheckout()
-    {
-
-    }
-
-    public function actionFinished()
-    {
-
-    }
 }
