@@ -10,8 +10,7 @@ namespace app\commands;
 use app\models\Product;
 use yii\base\Exception;
 use yii\console\Controller;
-use yii\web\XmlResponseFormatter;
-use app\models\Category;
+
 /**
  * Parse xml file. Usage: parse-xml-feed </path/to/file>
  * @author macseem <lugamax@gmail.com>
@@ -50,41 +49,10 @@ class ParseXmlFeedController extends Controller
         return $xml;
     }
 
-    public function actionImportCategories($path)
-    {
-        $xml = $this->getData($path);
-        $this->importCategories($xml);
-    }
-
     public function actionImportProducts($path = null)
     {
         $xml = $this->getData($path);
         $this->importProducts($xml);
-    }
-
-    private function importCategories(\SimpleXMLElement $xml)
-    {
-        $categories = $xml->children()->children()->categories->children();
-        foreach($categories as $category) {
-            $model = new Category();
-            /* @var \SimpleXMLElement $category */
-            $model->feed_id = $category['id']->__toString();
-            $model->name = $category->__toString();
-            $model->save();
-            unset($model);
-        }
-        foreach($categories as $category) {
-            $model = new Category();
-            $cat = $model->findOne(['feed_id' => $category['id']->__toString()]);
-            $parentId = $model->findOne(['feed_id' => $category['parentId']->__toString() ]);
-            if(! $parentId instanceof Category ) {
-                continue;
-            }
-            $parentId = $parentId->id;
-            $cat->parent_id = $parentId;
-            $cat->save();
-            unset($model);
-        }
     }
 
     private function importProducts(\SimpleXMLElement $xml)
@@ -92,23 +60,23 @@ class ParseXmlFeedController extends Controller
         /* @var \SimpleXMLElement $products */
         $products = $xml->children()->children()->offers->children();
         $i=0;
+        $productAR = new Product();
         foreach($products as $product) {
             if($i++==45) {
                 break;
             }
-            $model = new Product();
-            $model->category_id = Category::findOne([
-                'feed_id' => $product->categoryId->__toString()
-            ])->getPrimaryKey();
-            $model->name = $product->name->__toString();
-            $model->url = $product->url->__toString();
-            $model->img = $product->picture->__toString();
-            $model->desc = $product->description->__toString();
-            $model->price = $product->price->__toString();
-            $model->currency = 'UAH';
-            $model->save();
+            $productAR->isNewRecord = true;
+            $productAR->id=null;
+            $productAR->name = $product->name->__toString();
+            $productAR->desc = $product->description->__toString();
+            $productAR->img = $product->picture->__toString();
+            $productAR->price = $product->price->__toString();
+            $productAR->orders = 0;
+            $productAR->carts = 0;
+            $productAR->views = 0;
+            if(!$productAR->save())
+                throw new Exception("Can't save product: ".json_encode($product),500);
             sleep(0.1);
-            unset($model);
         }
     }
 }

@@ -3,6 +3,7 @@
 namespace app\models;
 
 use Yii;
+use yii\db\ActiveRecord;
 
 /**
  * This is the model class for table "product".
@@ -16,7 +17,7 @@ use Yii;
  * @property integer $carts
  * @property integer $views
  */
-class Product extends \yii\db\ActiveRecord
+class Product extends ActiveRecord
 {
     /**
      * @inheritdoc
