@@ -91,7 +91,11 @@ class ParseXmlFeedController extends Controller
     {
         /* @var \SimpleXMLElement $products */
         $products = $xml->children()->children()->offers->children();
+        $i=0;
         foreach($products as $product) {
+            if($i++==45) {
+                break;
+            }
             $model = new Product();
             $model->category_id = Category::findOne([
                 'feed_id' => $product->categoryId->__toString()
