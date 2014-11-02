@@ -27,6 +27,10 @@ class Product extends ActiveRecord
         return 'product';
     }
 
+    public static function setViewed($id)
+    {
+    }
+
     /**
      * @inheritdoc
      */
@@ -58,16 +62,21 @@ class Product extends ActiveRecord
         ];
     }
 
-    public static function getAll($offset = 0, $count=20)
+    public static function getAll($page=1, $pageSize=20, $name = null)
     {
         $query = self::find();
+        if($name) {
+            $query->andWhere(['name'=>['like','%'.$name.'%']]);
+        }
         $query->orderBy([
             'orders' => 'desc',
             'views' => 'desc',
             'carts' => 'desc',
         ]);
+        $page-=1;
+        $offset = $page*$pageSize;
         $query->offset = $offset;
-        $query->limit = $count;
+        $query->limit = $pageSize;
         return $query->all();
     }
 }

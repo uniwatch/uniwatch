@@ -3,29 +3,23 @@
 namespace app\controllers;
 
 use app\models\Product;
+use yii\web\Controller;
 
-class CatalogController extends \yii\web\Controller
+class CatalogController extends Controller
 {
     public $layout = false;
 
-    public $defaultAction = 'list';
+    public $defaultAction = 'home';
     public function actionHome()
     {
-        $this->layout = false;
-        $data = Product::getAll(0, 20);
-        return $this->render('list',['items'=>$data]);
-    }
-    public function actionList($page = 1, $name = '', $category = null, $priceFrom = null, $priceTo = null)
-    {
-        $data = Product::getProducts(
-            $page,
-            20,
-            $category,
-            $name,
-            $priceFrom,
-            $priceTo
-        );
-        return $this->render('list',['items'=>$data]);
+        if (!isset(\Yii::$app->request->cookies['track_id'])) {
+            \Yii::$app->response->cookies->add(new \yii\web\Cookie([
+                'name' => 'track_id',
+                'value' => time()
+            ]));
+        }
+        //TODO:: render some view;
+//        $this->render('home',$params);
     }
 
 }
