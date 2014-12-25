@@ -16,7 +16,7 @@ class ProductController extends Controller
         \Yii::$app->response->format='json';
         $model = new ViewedProduct();
         $model->product_id = $id;
-        $model->track_id = \Yii::$app->request->cookies['track_id'];
+        $model->track_id = \Yii::$app->request->cookies->getValue('track_id');
         $model->save();
 
         $product = Product::findOne(['id' => $id]);
