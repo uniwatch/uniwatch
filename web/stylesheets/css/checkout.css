@@ -1,0 +1,209 @@
+.clearfix {
+  zoom: 1;
+}
+.clearfix:before,
+.clearfix:after {
+  content: "";
+  display: table;
+}
+.clearfix:after {
+  clear: both;
+}
+#checkout {
+  background-image: url('../../images/bg/cart_bg.jpg');
+  background-repeat: no-repeat;
+  background-position: center center;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+}
+#checkout .checkout-wrap {
+  background: #fff;
+  width: 1000px;
+  border-radius: 5px;
+}
+#checkout .checkout-wrap .checkout-heading h1.heading {
+  font-family: 'Corbel', sans-serif;
+  font-size: 48px;
+  color: #26655e;
+  text-transform: uppercase;
+  text-align: center;
+}
+#checkout .checkout-wrap .checkout-body {
+  position: relative;
+  zoom: 1;
+}
+#checkout .checkout-wrap .checkout-body:before,
+#checkout .checkout-wrap .checkout-body:after {
+  content: "";
+  display: table;
+}
+#checkout .checkout-wrap .checkout-body:after {
+  clear: both;
+}
+#checkout .checkout-wrap .checkout-body > div {
+  position: relative;
+  float: left;
+  width: 50%;
+}
+#checkout .checkout-wrap .checkout-body .order-form .form-row {
+  width: 100%;
+  padding: 0 20px;
+  margin-bottom: 5px;
+}
+#checkout .checkout-wrap .checkout-body .order-form .form-row.bigger-margin {
+  margin-bottom: 10px;
+}
+#checkout .checkout-wrap .checkout-body .order-form .form-row.submit-button {
+  text-align: center;
+}
+#checkout .checkout-wrap .checkout-body .order-form .form-row label {
+  position: relative;
+  width: 100%;
+  text-align: left;
+  font-family: 'Corbel', sans-serif;
+  font-size: 18px;
+  text-transform: uppercase;
+  font-weight: normal;
+  margin: 0;
+  zoom: 1;
+}
+#checkout .checkout-wrap .checkout-body .order-form .form-row label:before,
+#checkout .checkout-wrap .checkout-body .order-form .form-row label:after {
+  content: "";
+  display: table;
+}
+#checkout .checkout-wrap .checkout-body .order-form .form-row label:after {
+  clear: both;
+}
+#checkout .checkout-wrap .checkout-body .order-form .form-row label input {
+  position: relative;
+  border: none;
+  border-bottom: 1px solid grey;
+  width: 60%;
+  float: right;
+  outline: none;
+}
+#checkout .checkout-wrap .checkout-body .order-form .form-row label textarea {
+  position: relative;
+  width: 60%;
+  float: right;
+  border: 1px solid grey;
+  outline: none;
+}
+#checkout .checkout-wrap .checkout-body .order-form .form-row button#submitOrder {
+  display: inline-block;
+  width: 250px;
+  height: 30px;
+  margin: 0;
+  padding: 0;
+  background-color: transparent;
+  border: none;
+  outline: none;
+  background-image: url('../../images/icons/place_your_order.png');
+  background-repeat: no-repeat;
+  background-position: center center;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+}
+#checkout .checkout-wrap .checkout-body .order-form .form-row button#submitOrder:hover {
+  background-image: url('../../images/icons/place_your_order_hover.png');
+}
+#checkout .checkout-wrap .checkout-body .order-details .details-heading h3.heading {
+  margin-top: 0;
+  text-align: left;
+  font-size: 18px;
+  text-transform: uppercase;
+  font-family: 'Corbel', sans-serif;
+}
+#checkout .checkout-wrap .checkout-body .order-details ul.order-items-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+#checkout .checkout-wrap .checkout-body .order-details ul.order-items-list li.order-item {
+  position: relative;
+  width: 100%;
+  height: 90px;
+  border-bottom: 1px solid grey;
+  zoom: 1;
+}
+#checkout .checkout-wrap .checkout-body .order-details ul.order-items-list li.order-item:before,
+#checkout .checkout-wrap .checkout-body .order-details ul.order-items-list li.order-item:after {
+  content: "";
+  display: table;
+}
+#checkout .checkout-wrap .checkout-body .order-details ul.order-items-list li.order-item:after {
+  clear: both;
+}
+#checkout .checkout-wrap .checkout-body .order-details ul.order-items-list li.order-item .item-image {
+  position: relative;
+  height: 100%;
+  width: 80px;
+  float: left;
+  background-color: #fff;
+}
+#checkout .checkout-wrap .checkout-body .order-details ul.order-items-list li.order-item .item-image img {
+  position: absolute;
+  height: 100%;
+  width: auto;
+  top: 50%;
+  left: 50%;
+  -webkit-transform: translate(-50%, -50%);
+  -moz-transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  -o-transform: translate(-50%, -50%);
+}
+#checkout .checkout-wrap .checkout-body .order-details ul.order-items-list li.order-item .item-body {
+  width: auto;
+  overflow: hidden;
+  float: none;
+}
+#checkout .checkout-wrap .checkout-body .order-details ul.order-items-list li.order-item .item-body .item-body-wrap {
+  position: relative;
+  display: table;
+  width: 100%;
+  height: 90px;
+}
+#checkout .checkout-wrap .checkout-body .order-details ul.order-items-list li.order-item .item-body .item-body-wrap > div {
+  display: table-cell;
+  vertical-align: middle;
+}
+#checkout .checkout-wrap .checkout-body .order-details ul.order-items-list li.order-item .item-body .item-body-wrap .name {
+  text-transform: uppercase;
+  font-family: 'kokilaregular', sans-serif;
+  font-size: 14px;
+}
+#checkout .checkout-wrap .checkout-body .order-details ul.order-items-list li.order-item .item-body .item-body-wrap .count label input {
+  font-family: 'kokilaregular', sans-serif;
+  font-size: 14px;
+}
+#checkout .checkout-wrap .checkout-body .order-details ul.order-items-list li.order-item .item-body .item-body-wrap .price {
+  font-family: 'copperplate_gothic_lightRg', sans-serif;
+  font-size: 20px;
+  padding-right: 14px;
+  width: 100px;
+  text-align: right;
+}
+#checkout .checkout-wrap .checkout-body .order-details ul.order-items-list li.order-item span.delete-order-item {
+  display: none;
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  top: 10px;
+  right: 10px;
+  cursor: pointer;
+  background-image: url('../../images/icons/delete-remove.png');
+  background-repeat: no-repeat;
+  background-position: center center;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+}
+#checkout .checkout-wrap .checkout-body .order-details ul.order-items-list li.order-item:hover span.delete-order-item {
+  display: block;
+}

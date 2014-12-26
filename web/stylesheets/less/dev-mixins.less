@@ -1,0 +1,93 @@
+.background-size(@size) {
+	-webkit-background-size: @size;
+	-moz-background-size: @size;
+	-o-background-size: @size;
+	background-size: @size;
+}
+
+.transform(@string) {
+	-webkit-transform: @string;
+	-moz-transform: @string;
+	-ms-transform: @string;
+	-o-transform: @string;
+}
+
+.scale (@factor) {
+	-webkit-transform: scale(@factor);
+	-moz-transform: scale(@factor);
+	-ms-transform: scale(@factor);
+	-o-transform: scale(@factor);
+}
+
+.rotate (@deg) {
+	-webkit-transform: rotate(@deg);
+	-moz-transform: rotate(@deg);
+	-ms-transform: rotate(@deg);
+	-o-transform: rotate(@deg);
+}
+
+.skew (@deg, @deg2) {
+	-webkit-transform: skew(@deg, @deg2);
+	-moz-transform: skew(@deg, @deg2);
+	-ms-transform: skew(@deg, @deg2);
+	-o-transform: skew(@deg, @deg2);
+}
+
+.translate (@x, @y:0) {
+	-webkit-transform: translate(@x, @y);
+	-moz-transform: translate(@x, @y);
+	-ms-transform: translate(@x, @y);
+	-o-transform: translate(@x, @y);
+}
+
+.translateY(@y:0) {
+	-webkit-transform: translateY(@y);
+	   -moz-transform: translateY(@y);
+		-ms-transform: translateY(@y);
+		 -o-transform: translateY(@y);
+}
+.translateX(@x:0) {
+	-webkit-transform: translateX(@x);
+	   -moz-transform: translateX(@x);
+	    -ms-transform: translateX(@x);
+		 -o-transform: translateX(@x);
+}
+
+.translate3d (@x, @y: 0, @z: 0) {
+	-webkit-transform: translate3d(@x, @y, @z);
+	-moz-transform: translate3d(@x, @y, @z);
+	-ms-transform: translate3d(@x, @y, @z);
+	-o-transform: translate3d(@x, @y, @z);
+}
+
+.transition (@transition) {
+	-webkit-transition: @transition;
+	   -moz-transition: @transition;
+		-ms-transition: @transition;
+		 -o-transition: @transition;
+}
+
+.clearfix {
+	zoom: 1;
+	&:before, &:after {
+		content: "";
+		display: table;
+	}
+	&:after {
+		clear: both;
+	}
+}
+
+.transition-delay(@delay) {
+	-webkit-transition-delay: @delay;
+	-moz-transition-delay: @delay;
+	-ms-transition-delay: @delay;
+	-o-transition-delay: @delay;
+}
+
+.box-shadow(@arguments) {
+	-webkit-box-shadow: @arguments;
+	-moz-box-shadow: @arguments;
+	-o-box-shadow: @arguments;
+	box-shadow: @arguments;
+}

@@ -1,0 +1,80 @@
+@import 'dev-mixins';
+@import 'dev-fonts';
+
+body {
+	position: relative;
+	min-width: 1024px;
+	width: 100%;
+	background: url('../../images/bg/bg-catalog.png') no-repeat center center fixed;
+	.background-size(cover);
+
+	&.fixed {
+		position: fixed;
+		height: 100%;
+		width: 100%;
+		overflow: hidden;
+	}
+}
+
+.disable-hover,
+.disable-hover * {
+	pointer-events: none !important;
+}
+
+.page {
+	position: relative;
+	min-height: 100vh;
+//	display: none;
+	&.active {
+		display: block;
+	}
+}
+
+#home-page {
+	background: url('../../images/bg/bg_homepage.png') no-repeat center center;
+	.background-size(cover);
+
+	#logo {
+		position: absolute;
+		top: 50%;
+		left: 0;
+		width: 50%;
+		.translate(0, -50%);
+
+		.logo-image {
+			position: relative;
+			width: 100%;
+		}
+	}
+
+	#catalog-link {
+		position: absolute;
+		text-align: center;
+		bottom: 20px;
+		width: 50%;
+
+		span {
+			@text-color: hsl(49, 2%, 47%);
+			cursor: pointer;
+			font-family: 'kokilaregular', sans-serif;
+			font-size: 36px;
+			color: @text-color;
+			text-transform: uppercase;
+			.transition(0.3s color ease-in-out);
+
+			&:hover {
+				color: lighten(@text-color, 10%);
+
+			}
+		}
+	}
+}
+.ScrollSceneIndicators {
+	z-index: 100 !important;
+}
+
+@import "catalog/catalog";
+@import "product";
+@import "cart";
+@import "checkout";
+@import 'popups';
