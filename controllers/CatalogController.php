@@ -7,7 +7,7 @@ use yii\web\Controller;
 
 class CatalogController extends Controller
 {
-    public $layout = false;
+    public $layout = 'main';
 
     public $defaultAction = 'home';
     public function actionHome()
@@ -18,8 +18,7 @@ class CatalogController extends Controller
                 'value' => time()
             ]));
         }
-        //TODO:: render some view;
-//        $this->render('home',$params);
+        return $this->render('home');
     }
 
 }

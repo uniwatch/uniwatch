@@ -13,19 +13,25 @@ use yii\web\AssetBundle;
  * @author Qiang Xue <qiang.xue@gmail.com>
  * @since 2.0
  */
-class WithMenuAsset extends AssetBundle
+class BaseAsset extends AssetBundle
 {
     public $basePath = '@webroot';
     public $baseUrl = '@web';
     public $css = [
-        'css/with-menu.css',
-        'css/common/top-sidebar.css',
-        'css/common/left-sidebar.css',
+        'stylesheets/css/main.css',
     ];
     public $js = [
-        'js/menu/search.js',
+        'js/vendors/angular.min.js',
+        'js/vendors/jquery.mousewheel.min.js',
+        'js/vendors/gsap/TweenMax.min.js',
+        'js/vendors/gsap/plugins/ScrollToPlugin.min.js',
+        'js/vendors/scrollMagic/jquery.scrollmagic.min.js',
+        'js/app.js',
+        'js/directives.js',
+        'js/services.js'
     ];
     public $depends = [
         'yii\web\JqueryAsset',
+        'yii\bootstrap\BootstrapAsset'
     ];
 }
