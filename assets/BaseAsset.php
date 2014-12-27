@@ -15,10 +15,10 @@ use yii\web\AssetBundle;
  */
 class BaseAsset extends AssetBundle
 {
-    public $basePath = '@webroot';
-    public $baseUrl = '@web';
+    public $sourcePath = '@app/assets/base';
+    public $baseUrl = '@web/assets';
     public $css = [
-        'stylesheets/css/main.css',
+        'stylesheets/css/main.less'
     ];
     public $js = [
         'js/vendors/angular.min.js',
