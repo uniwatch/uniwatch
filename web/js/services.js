@@ -1,37 +1,50 @@
 'use strict';
 
-app.factory('catalogService', ['$http', '$rootScope', function($http, $rootScope) {
+app.factory('uniService', ['$http', '$q', '$rootScope', function($http, $q, $rootScope) {
+//required only 'url' parameter
+//options: { url: '', method: 'GET', data: '', headers: {}}
+    var makeRequest = function (options) {
+        var defer = $q.defer();
+
+        // Declare request options with defaults
+        var requestOptions = {
+            //Default method is 'GET'
+            method: options.method || 'GET',
+            url: options.url,
+            headers: options.headers
+        };
+
+        if (requestOptions.method === 'GET') {
+            requestOptions.params = options.data;
+        } else {
+            requestOptions.data = options.data;
+        }
+
+        $http(requestOptions)
+            .success(function (data) {
+                defer.resolve(data);
+            }).
+            error(function (data, status) {
+                //TODO: show error popup
+                defer.reject(status);
+            });
+
+        return defer.promise;
+    };
+
     return {
         viewProduct: function(product) {
             $rootScope.product = product;
         },
-        getProducts: function() {
-            $http({
-                url: '/product/get-list',
+        getProducts: function(page, pageSize) {
+            return makeRequest({
+                url: 'product/getlist',
                 method: 'GET',
                 data: {
-                    page: 1,
-                    pageSize: 10
+                    page: page,
+                    pageSize: pageSize
                 }
-            }).success(function(data, status, headers, config) {
-                   console.log(data);
-                }).
-                error(function(data, status, headers, config) {
-                    // called asynchronously if an error occurs
-                    // or server returns response with an error status.
-                });
+            })
         }
     };
 }]);
-
-app.service('productStorage', function () {
-    var product = {};
-    return {
-        setProduct: function (product) {
-            product = name;
-        },
-        getProduct: function () {
-            return product;
-        }
-    }
-});

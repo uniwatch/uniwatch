@@ -54,7 +54,7 @@ BaseAsset::register($this);
         </div>
     </div>
 
-    <div id="products-list-wrap" ng-controller="catalogCtrl">
+    <div id="products-list-wrap" ng-controller="catalogCtrl" load-products>
         <ul class="products-list">
             <li class="product-item" ng-repeat="product in products">
                 <div class="product-item-inner" view-product="{{product.id}}">
@@ -262,3 +262,5 @@ BaseAsset::register($this);
         </div>
     </div>
 </div>
+
+<div class="loader" id="loader"></div>

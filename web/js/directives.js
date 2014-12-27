@@ -45,11 +45,13 @@ app.directive('initPage', function() {
             function initScrollPlugin() {
                 var controller = new ScrollMagic();
 
+                //scene for menu pin
                 var pin_scene = new ScrollScene({
                     triggerElement: '#catalog-page',
                     triggerHook: 0
                 }).setPin('#main-menu');
 
+                //scene for menu change style
                 var menu_scene = new ScrollScene({
                     triggerElement: '#main-menu',
                     triggerHook: 0,
@@ -58,8 +60,6 @@ app.directive('initPage', function() {
                 }).on('progress', menuUpdate);
 
                 controller.addScene([pin_scene, menu_scene]);
-                //console.log('123');
-
             }
 
             function menuUpdate(event) {
@@ -79,7 +79,6 @@ app.directive('initPage', function() {
                 scrollToTop();
                 disableHoverOnScroll();
                 initScrollPlugin();
-
             });
         }
     }
@@ -105,6 +104,29 @@ app.directive('windowResize', function() {
                     });
                 }, timer);
             });
+        }
+    }
+});
+
+app.directive('loadProducts', function() {
+    return {
+        restrict: 'A',
+        link: function(scope) {
+
+            var controller = new ScrollMagic();
+
+            var load_scene = new ScrollScene({
+                triggerElement : "#catalog-page",
+                triggerHook    : 1,
+                offset: -100
+            }).on('start', loadProducts);
+
+            controller.addScene(load_scene);
+
+            function loadProducts() {
+                $('#loader').addClass('active');
+                scope.loadProducts();
+            }
         }
     }
 });

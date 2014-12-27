@@ -25,7 +25,7 @@ app.controller('appCtrl', ['$scope', function($scope) {
     };
 }]);
 
-app.controller('catalogCtrl', ['$scope', '$filter', 'catalogService', function($scope, catalogService, $filter) {
+app.controller('catalogCtrl', ['$scope', 'uniService', function($scope, uniService) {
     $scope.products = [
         {
             name: 'Perrelet P Pierre Lanier',
@@ -84,8 +84,8 @@ app.controller('catalogCtrl', ['$scope', '$filter', 'catalogService', function($
         }
     ];
 
-    $scope.getProducts = function (offset, count) {
-        catalogService.list().then(function(response) {
+    $scope.loadProducts = function (page, pageSize) {
+        uniService.getProducts().then(function(response) {
             $scope.products = response;
         });
     };
