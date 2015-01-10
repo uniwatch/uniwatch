@@ -1,6 +1,6 @@
 @import "dev-mixins";
 #product-view {
-	background-image: url('../../images/bg/product-bg.jpg');
+	background-image: url('/images/bg/product-bg.jpg');
 	background-repeat: no-repeat;
 	background-position: center center;
 	.background-size(cover);
@@ -60,6 +60,7 @@
 					height: auto;
 				}
 			}
+			
 			.product-content {
 				width: auto;
 				overflow: hidden;
@@ -125,6 +126,19 @@
 				}
 			}
 
+			.close-button {
+				position: absolute;
+				right: 0;
+				top: 0;
+				
+				display: block;
+				height: 32px;
+				width: 32px;
+
+				cursor: pointer;
+				
+				background: url("/images/icons/close_button.png") no-repeat center center;
+			}
 		}
 		.left-panel {
 			left: 100px;

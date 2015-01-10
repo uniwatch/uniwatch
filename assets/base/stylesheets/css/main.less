@@ -5,8 +5,9 @@ body {
 	position: relative;
 	min-width: 1024px;
 	width: 100%;
-	background: url('../../images/bg/bg-catalog.png') no-repeat center center fixed;
+	background: url('/images/bg/bg-catalog.png') no-repeat center center fixed;
 	.background-size(cover);
+
 
 	&.fixed {
 		position: fixed;
@@ -31,7 +32,7 @@ body {
 }
 
 #home-page {
-	background: url('../../images/bg/bg_homepage.png') no-repeat center center;
+	background: url('/images/bg/bg_homepage.png') no-repeat center center;
 	.background-size(cover);
 
 	#logo {
@@ -158,8 +159,24 @@ body {
 }
 
 
+div.debug {
+	z-index: 100;
+	position: fixed;
+	top: 50px;
+	right: 20px;
+	color: red;
+	font-weight: 500;
+}
+
+#load-trigger {
+	opacity: 0;
+	background-color: transparent;
+	height: 10px;
+}
+
 @import "catalog/catalog";
 @import "product";
 @import "cart";
 @import "checkout";
 @import 'popups';
+@import "footer";

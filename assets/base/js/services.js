@@ -1,8 +1,9 @@
 'use strict';
 
 app.factory('uniService', ['$http', '$q', '$rootScope', function($http, $q, $rootScope) {
-//required only 'url' parameter
-//options: { url: '', method: 'GET', data: '', headers: {}}
+    // required only 'url' parameter
+    // options: { url: '', method: 'GET', data: '', headers: {}}
+    var service;
     var makeRequest = function (options) {
         var defer = $q.defer();
 
@@ -32,11 +33,11 @@ app.factory('uniService', ['$http', '$q', '$rootScope', function($http, $q, $roo
         return defer.promise;
     };
 
-    return {
-        viewProduct: function(product) {
+    service = {
+        viewProduct: function (product) {
             $rootScope.product = product;
         },
-        getProducts: function(page, pageSize) {
+        getProducts: function (page, pageSize) {
             return makeRequest({
                 url: 'product/getlist',
                 method: 'GET',
@@ -47,4 +48,6 @@ app.factory('uniService', ['$http', '$q', '$rootScope', function($http, $q, $roo
             })
         }
     };
+
+    return service;
 }]);

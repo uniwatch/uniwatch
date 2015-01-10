@@ -11,13 +11,14 @@ $this->beginPage();
 <head lang="en">
     <?php $this->head();?>
 </head>
-<body ng-app="app" ng-controller="appCtrl" init-page window-resize>
-<?php $this->beginBody();?>
-<div class="main-wrap" role="main">
-    <?php echo $content;?>
-</div>
+<body class="fixed" ng-app="app" ng-controller="appCtrl" init-page window-resize>
+    <?php $this->beginBody();?>
 
-<?php $this->endBody();?>
+    <div class="main-wrap" role="main">
+        <?php echo $content;?>
+    </div>
+
+    <?php $this->endBody();?>
 </body>
 </html>
 <?php $this->endPage();?>

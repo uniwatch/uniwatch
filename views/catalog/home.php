@@ -13,7 +13,6 @@ BaseAsset::register($this);
     </div>
 </section>
 
-
 <section id="catalog-page" class="page">
     <div id="main-menu" role="navigation">
         <div class="menu-wrap">
@@ -54,12 +53,17 @@ BaseAsset::register($this);
         </div>
     </div>
 
-    <div id="products-list-wrap" ng-controller="catalogCtrl" load-products>
+    <div id="products-list-wrap" ng-controller="catalogCtrl" load-products ng-init="init()">
+<!--        <div class="debug">-->
+<!--            <span id="pageCount">{{page}}</span>-->
+<!--            <span id="pageSize">{{pageSize}}</span>-->
+<!--        </div>-->
+
         <ul class="products-list">
             <li class="product-item" ng-repeat="product in products">
-                <div class="product-item-inner" view-product="{{product.id}}">
+                <div class="product-item-inner" data-id="{{product.id}}" data-ng-click="viewProduct()">
                     <div class="image-container">
-                        <img class="image" src="{{product.image}}" align="center" alt=""/>
+                        <img class="image" data-ng-src="{{product.img}}" align="center" alt=""/>
                     </div>
                     <div class="content-container">
                         <div class="description">
@@ -79,8 +83,49 @@ BaseAsset::register($this);
             </li>
         </ul>
     </div>
+    <div id="load-trigger"></div>
 </section>
 
+<section id="footer">
+    <div class="box contacts">
+        <div class="contacts-inner">
+            <div class="phone"><span>063 230 70 25</span></div>
+            <div class="mail"><span>support@uniwatch.com</span></div>
+        </div>
+    </div>
+    <div class="box links">
+        <div class="links-inner">
+            <ul class="links-list">
+                <li class="links-item"><a href="#">homepage</a></li>
+                <li class="links-item"><a href="#">about us</a></li>
+                <li class="links-item"><a href="#">catalog</a></li>
+                <li class="links-item"><a href="#">contacts</a></li>
+                <li class="links-item"><a href="#">search</a></li>
+                <li class="links-item"><a href="#">cart</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="box copyright">
+        <div class="copyright-inner">
+            <div class="image"><img src="/images/icons/footer_logo.png" alt="UNIWATCH"/></div>
+            <div class="text"><span>All rights reserved. &copy; 2014 UNIWATCH</span></div>
+        </div>
+    </div>
+    <div class="box social">
+        <div class="social-inner">
+            <div class="text">share</div>
+            <div class="icons">
+                <ul class="icons-list clearfix">
+                    <li class="icon-item vk"></li>
+                    <li class="icon-item twitter"></li>
+                    <li class="icon-item instagram"></li>
+                    <li class="icon-item google"></li>
+                    <li class="icon-item facebook"></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
 
 <!--CART-->
 <div id="cart" class="popup" ng-controller="cartCtrl">
@@ -89,13 +134,13 @@ BaseAsset::register($this);
             <ul class="cart-products-list">
                 <li class="cart-product-item" ng-repeat="item in cart.items">
                     <div class="cart-product-image">
-                        <img src="{{item.image}}" alt=""/>
+                        <img data-ng-src="{{item.image}}" alt=""/>
                     </div>
                     <div class="cart-product-body">
                         <div class="body-wrap">
                             <div class="name">{{item.name}}</div>
                             <div class="count">
-                                <label><input type="text" value="{{item.count}}" pattern="[0-9]"/></label>
+                                <label><input type="text" ng-value="{{item.count}}" pattern="[0-9]"/></label>
                             </div>
                             <div class="price">{{item.price}}</div>
                         </div>
@@ -169,7 +214,7 @@ BaseAsset::register($this);
                     <ul class="order-items-list">
                         <li class="order-item" ng-repeat="item in checkout.items">
                             <div class="item-image">
-                                <img src="{{item.image}}" alt=""/>
+                                <img data-ng-src="{{item.image}}" alt=""/>
                             </div>
                             <div class="item-body">
                                 <div class="item-body-wrap">
@@ -217,15 +262,16 @@ BaseAsset::register($this);
 
 
 <!--PRODUCT VIEW-->
-<div id="product-view" class="popup" ng-controller="productCtrl">
-    <div class="product-wrap">
+<div id="product-view" class="popup active" ng-controller="productCtrl">
+    <div class="product-wrap popup-content">
         <div class="left-panel">
             <ul class="related-products-list purchased-together">
                 <li class="related-product-item" ng-repeat="related in product.ordered">
-                    <img class="related-image" src="{{related.image}}" alt="{{related.name}}"/>
+                    <img class="related-image" data-ng-src="{{related.image}}" alt="{{related.name}}"/>
                 </li>
             </ul>
         </div>
+
         <div class="middle-panel product-main-view">
             <div class="product-image">
                 <img src="{{product.img}}" alt="product.name"/>
@@ -240,23 +286,25 @@ BaseAsset::register($this);
                         {{product.desc}}
                     </div>
                     <div class="controls">
-                        <span class="buy-button" id="product-buy" checkout-product >buy</span>
-                        <span class="add-to-cart" id="product-add-to-cart" cart-product >to cart</span>
+                        <span class="buy-button" id="product-buy">buy</span>
+                        <span class="add-to-cart" id="product-add-to-cart">to cart</span>
                     </div>
                     <div class="recently-viewed">
                         <ul class=" related-products-list recently-viewed-list">
                             <li class="recently-viewed-item" ng-repeat="viewed in product.related">
-                                <img src="{{viewed.image}}" alt="{{viewed.name}}"/>
+                                <img data-ng-src="{{viewed.image}}" alt="{{viewed.name}}"/>
                             </li>
                         </ul>
                     </div>
                 </div>
             </div>
+            <span class="close-button" title="Back to catalog"></span>
         </div>
+
         <div class="right-panel">
             <ul class="related-products-list added-together">
                 <li class="related-product-item" ng-repeat="related in product.carted">
-                    <img class="related-image" src="{{related.image}}" alt="{{related.name}}"/>
+                    <img class="related-image" data-ng-src="{{related.image}}" alt="{{related.name}}"/>
                 </li>
             </ul>
         </div>

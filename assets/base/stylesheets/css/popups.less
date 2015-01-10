@@ -11,12 +11,10 @@
 	width: 100%;
 	overflow-y: auto;
 	overflow-x: hidden;
-	background-position: center center;
-	background-repeat: no-repeat;
+	background: no-repeat center center;
 	.background-size(cover);
-	display: none;
 
-	&.shown {
+	&.active {
 		display: block;
 	}
 
@@ -31,5 +29,4 @@
 
 .popup {
 	.transition(0.3s top ease-in-out);
-
 }

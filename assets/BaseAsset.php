@@ -17,18 +17,21 @@ class BaseAsset extends AssetBundle
 {
     public $sourcePath = '@app/assets/base';
     public $baseUrl = '@web/assets';
-    public $css = [
-        'stylesheets/css/main.less'
-    ];
     public $js = [
         'js/vendors/angular.min.js',
+        'js/vendors/angular-route.min.js',
         'js/vendors/jquery.mousewheel.min.js',
+        'js/vendors/smoothScroll/jquery.simplr.smoothscroll.min.js',
         'js/vendors/gsap/TweenMax.min.js',
         'js/vendors/gsap/plugins/ScrollToPlugin.min.js',
         'js/vendors/scrollMagic/jquery.scrollmagic.min.js',
+        'js/vendors/scrollMagic/jquery.scrollmagic.debug.js',
         'js/app.js',
         'js/directives.js',
         'js/services.js'
+    ];
+    public $css = [
+        'stylesheets/css/main.less'
     ];
     public $depends = [
         'yii\web\JqueryAsset',
