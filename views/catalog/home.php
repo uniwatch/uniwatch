@@ -116,11 +116,11 @@ BaseAsset::register($this);
             <div class="text">share</div>
             <div class="icons">
                 <ul class="icons-list clearfix">
-                    <li class="icon-item vk"></li>
-                    <li class="icon-item twitter"></li>
-                    <li class="icon-item instagram"></li>
-                    <li class="icon-item google"></li>
-                    <li class="icon-item facebook"></li>
+                    <li class="icon-item vk"><a class="social-link" href="#"></a></li>
+                    <li class="icon-item twitter"><a class="social-link" href="#"></a></li>
+                    <li class="icon-item instagram"><a class="social-link" href="#"></a></li>
+                    <li class="icon-item google"><a class="social-link" href="#"></a></li>
+                    <li class="icon-item facebook"><a class="social-link" href="#"></a></li>
                 </ul>
             </div>
         </div>

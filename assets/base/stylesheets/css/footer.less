@@ -1,3 +1,5 @@
+@import "dev-mixins";
+
 #footer {
 	position: absolute;
 	left: 0;
@@ -21,15 +23,31 @@
 		min-width: 200px;
 
 		&.contacts {
+			position: relative;
+			float: left;
+			display: table;
+			margin-right: 7%;
+
+			.contacts-inner {
+				display: table-cell;
+				vertical-align: middle;
+				padding-left: 30px;
+			}
+
 			.contacts-inner > div {
 				position: relative;
-				margin-left: 25px;
-				min-height: 25px;
+				margin-left: 30px;
+				min-height: 30px;
+
 				&::before {
 					position: absolute;
 					content: '';
 					display: block;
-					left: 0;
+
+					width: 30px;
+					height: 30px;
+
+					left: -30px;
 
 					background-image: url("/images/icons/footer_sprite.png");
 					background-repeat: no-repeat;
@@ -37,15 +55,15 @@
 				}
 
 				&.phone::before {
-					background-position: 0 0;
+					background-position: 0 1px;
 				}
 				
 				&.mail::before {
-					background-position: 0 0;
+					background-position: 0 -25px;
 				}
 			}
 			.contacts-inner > div > span {
-				line-height: 25px;
+				line-height: 30px;
 				font-family: 'copperplate_gothic_lightRg', sans-serif;
 				font-size: 16px;
 				text-transform: uppercase;
@@ -55,7 +73,14 @@
 		}
 
 		&.links {
+			position: relative;
+			float: left;
+			display: table;
+
 			.links-inner {
+				display: table-cell;
+				vertical-align: middle;
+
 				ul.links-list {
 					list-style: none;
 					margin: 0;
@@ -80,7 +105,7 @@
 
 		&.copyright {
 			left: 50%;
-			margin-left: -100px;
+			.translateX(-50%);
 			text-align: center;
 
 			.image img {
@@ -95,8 +120,12 @@
 		}
 
 		&.social {
+			right: 75px;
+
 			.social-inner {
 				.text {
+					margin-top: 30px;
+					text-align: center;
 					font-family: 'copperplate_gothic_lightRg', sans-serif;
 					font-weight: bold;
 					text-transform: uppercase;
@@ -113,8 +142,8 @@
 						float: left;
 						display: block;
 
-						width: 50px;
-						height: 50px;
+						width: 60px;
+						height: 60px;
 
 						background-image: url("/images/icons/footer_sprite.png");
 						background-repeat: no-repeat;
@@ -123,7 +152,26 @@
 						cursor: pointer;
 
 						&.vk {
-							background-position: 0 0;
+							background-position: -30px 3px;
+						}
+						&.twitter {
+							background-position: -91px 3px;
+						}
+						&.instagram {
+							background-position: -149px 3px;
+						}
+						&.google {
+							background-position: -207px 3px;
+						}
+						&.facebook {
+							background-position: -266px 3px;
+						}
+
+						a.social-link {
+							&, &:hover, &.active {
+								text-decoration: none;
+								color: #000;
+							}
 						}
 					}
 				}
