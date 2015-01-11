@@ -145,25 +145,6 @@ app.directive('loadProducts', function() {
     }
 });
 
-//app.directive('viewProduct', function() {
-//    return {
-//        restrict: 'A',
-//        scope: true,
-//        link: function(scope, element, attrs) {
-//
-//            function view(prod_id) {
-//                scope.viewProduct(prod_id);
-//
-//                showPopup('#product-view');
-//            }
-//
-//            element.on('click', function() {
-//                view(attrs.viewProduct);
-//            });
-//        }
-//    }
-//});
-
 app.directive('checkoutProduct', function() {
     return {
         restrict: 'A',

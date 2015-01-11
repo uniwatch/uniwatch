@@ -1,16 +1,7 @@
 'use strict';
 /*global $:false, jQuery:false */
 
-var app = angular.module('app', ['ngRoute'])
-    .config(function($routeProvider, $locationProvider) {
-        $routeProvider
-            .when('/product/:productId', {
-                controller: 'productCtrl'
-            });
-
-        // configure html5 to get links working on jsfiddle
-        $locationProvider.html5Mode(true);
-    });
+var app = angular.module('app', []);
 
 
 
@@ -27,6 +18,10 @@ app.controller('appCtrl', ['$scope', function($scope) {
 
     $scope.windowHeight = $(window).height();
 
+    $scope.product = [];
+
+    $scope.products = [];
+
     /**
      * Detects scroll direction. You just need to pass scroll event;
      * @param event
@@ -41,13 +36,20 @@ app.controller('appCtrl', ['$scope', function($scope) {
      * @param popup - jQuery selector
      */
     $scope.showPopup = function(popup) {
-        var popupObj = $(popup);
+        var $popup = $(popup),
+            $body  = $('body'),
+            $menu  = $('#main-menu'),
+            $foot  = $('#footer');
 
-        if (popupObj.length) {
-            $('body').addClass('fixed');
+        if ($popup.length) {
+            $body.addClass('fixed');
             $('.popup').removeClass('active');
 
-            $(popup).addClass('active');
+            $popup.fadeIn('slow', function() {
+                $popup.addClass('active');
+                $menu.addClass('fixed');
+                $foot.addClass('fixed');
+            });
         }
     };
 
@@ -68,18 +70,16 @@ app.controller('appCtrl', ['$scope', function($scope) {
     };
 }]);
 
-app.controller('catalogCtrl', ['$scope', 'uniService', function($scope, uniService) {
+app.controller('catalogCtrl', ['$scope', '$rootScope', 'uniService', function($scope, $rootScope, uniService) {
     $scope.page = 1;
     $scope.pageSize = 24;
-
-    $scope.products = [];
 
     $scope.init = function() {
         //TODO: move this to YII model
         uniService.getProducts($scope.page, $scope.pageSize).then(function(response) {
             if (response.length) {
 
-                $scope.products = response;
+                $rootScope.products = response;
                 $scope.page ++;
             }
 
@@ -119,92 +119,91 @@ app.controller('catalogCtrl', ['$scope', 'uniService', function($scope, uniServi
     };
 
     $scope.viewProduct = function(id) {
-        $scope.showPopup('#product-view');
+        uniService.viewProduct(id).then(function(response) {
+            if (typeof response == 'object')  {
+                $scope.showPopup('#product-view');
 
-        for(var product in $scope.products) {
-            if ($scope.products[product].id == id) {
-                //catalogService.viewProduct(product);
-                return $scope.products[product];
+                $scope.product = response;
             }
-        }
+        });
     };
 }]);
 
 app.controller('productCtrl', ['$scope', function($scope) {
-    $scope.product = {
-        name: 'Perrelet P Pierre Lanier',
-        price: '4500',
-        id: 1,
-        img: 'images/catalog/perrelet-a1047-2.jpg',
-        desc: 'Manufacturer: Switzerland / Movement: mechanical with automatic winding / Glass: sapphire / Type: Switches / Case : Steel / Water Resistant: 50m / Strap : Rubber / Style: Men',
-        related: [
-            {
-                name: 'Perrelet P Pierre Lanier',
-                id: 4,
-                img: 'images/catalog/perrelet-a1047-2.jpg'
-            },
-            {
-                name: 'Perrelet P Pierre Lanier',
-                id: 4,
-                img: 'images/catalog/perrelet-a1047-2.jpg'
-            },
-            {
-                name: 'Perrelet P Pierre Lanier',
-                id: 4,
-                img: 'images/catalog/perrelet-a1047-2.jpg'
-            },
-            {
-                name: 'Perrelet P Pierre Lanier',
-                id: 4,
-                img: 'images/catalog/perrelet-a1047-2.jpg'
-            }
-        ],
-        ordered: [
-            {
-                name: 'Perrelet P Pierre Lanier',
-                id: 4,
-                img: 'images/catalog/perrelet-a1047-2.jpg'
-            },
-            {
-                name: 'Perrelet P Pierre Lanier',
-                id: 4,
-                img: 'images/catalog/perrelet-a1047-2.jpg'
-            },
-            {
-                name: 'Perrelet P Pierre Lanier',
-                id: 4,
-                img: 'images/catalog/perrelet-a1047-2.jpg'
-            },
-            {
-                name: 'Perrelet P Pierre Lanier',
-                price: '4500',
-                id: 4,
-                currency: '$',
-                img: 'images/catalog/perrelet-a1047-2.jpg'
-            }
-        ],
-        carted: [
-            {
-                name: 'Perrelet P Pierre Lanier',
-                img: 'images/catalog/perrelet-a1047-2.jpg'
-            },
-            {
-                name: 'Perrelet P Pierre Lanier',
-                id: 4,
-                img: 'images/catalog/perrelet-a1047-2.jpg'
-            },
-            {
-                name: 'Perrelet P Pierre Lanier',
-                id: 4,
-                img: 'images/catalog/perrelet-a1047-2.jpg'
-            },
-            {
-                name: 'Perrelet P Pierre Lanier',
-                id: 4,
-                img: 'images/catalog/perrelet-a1047-2.jpg'
-            }
-        ]
-    };
+    //$scope.product = {
+    //    name: 'Perrelet P Pierre Lanier',
+    //    price: '4500',
+    //    id: 1,
+    //    img: 'images/catalog/perrelet-a1047-2.jpg',
+    //    desc: 'Manufacturer: Switzerland / Movement: mechanical with automatic winding / Glass: sapphire / Type: Switches / Case : Steel / Water Resistant: 50m / Strap : Rubber / Style: Men',
+    //    related: [
+    //        {
+    //            name: 'Perrelet P Pierre Lanier',
+    //            id: 4,
+    //            img: 'images/catalog/perrelet-a1047-2.jpg'
+    //        },
+    //        {
+    //            name: 'Perrelet P Pierre Lanier',
+    //            id: 4,
+    //            img: 'images/catalog/perrelet-a1047-2.jpg'
+    //        },
+    //        {
+    //            name: 'Perrelet P Pierre Lanier',
+    //            id: 4,
+    //            img: 'images/catalog/perrelet-a1047-2.jpg'
+    //        },
+    //        {
+    //            name: 'Perrelet P Pierre Lanier',
+    //            id: 4,
+    //            img: 'images/catalog/perrelet-a1047-2.jpg'
+    //        }
+    //    ],
+    //    ordered: [
+    //        {
+    //            name: 'Perrelet P Pierre Lanier',
+    //            id: 4,
+    //            img: 'images/catalog/perrelet-a1047-2.jpg'
+    //        },
+    //        {
+    //            name: 'Perrelet P Pierre Lanier',
+    //            id: 4,
+    //            img: 'images/catalog/perrelet-a1047-2.jpg'
+    //        },
+    //        {
+    //            name: 'Perrelet P Pierre Lanier',
+    //            id: 4,
+    //            img: 'images/catalog/perrelet-a1047-2.jpg'
+    //        },
+    //        {
+    //            name: 'Perrelet P Pierre Lanier',
+    //            price: '4500',
+    //            id: 4,
+    //            currency: '$',
+    //            img: 'images/catalog/perrelet-a1047-2.jpg'
+    //        }
+    //    ],
+    //    carted: [
+    //        {
+    //            name: 'Perrelet P Pierre Lanier',
+    //            img: 'images/catalog/perrelet-a1047-2.jpg'
+    //        },
+    //        {
+    //            name: 'Perrelet P Pierre Lanier',
+    //            id: 4,
+    //            img: 'images/catalog/perrelet-a1047-2.jpg'
+    //        },
+    //        {
+    //            name: 'Perrelet P Pierre Lanier',
+    //            id: 4,
+    //            img: 'images/catalog/perrelet-a1047-2.jpg'
+    //        },
+    //        {
+    //            name: 'Perrelet P Pierre Lanier',
+    //            id: 4,
+    //            img: 'images/catalog/perrelet-a1047-2.jpg'
+    //        }
+    //    ]
+    //};
 
     $scope.view = function(productID) {
 

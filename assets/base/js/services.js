@@ -34,9 +34,16 @@ app.factory('uniService', ['$http', '$q', '$rootScope', function($http, $q, $roo
     };
 
     service = {
-        viewProduct: function (product) {
-            $rootScope.product = product;
+        viewProduct: function (id) {
+            return makeRequest({
+                url: 'product/view',
+                method: 'GET',
+                data: {
+                    id: id
+                }
+            });
         },
+
         getProducts: function (page, pageSize) {
             return makeRequest({
                 url: 'product/getlist',

@@ -56,7 +56,7 @@ BaseAsset::register($this);
     <div id="products-list-wrap" ng-controller="catalogCtrl" load-products ng-init="init()">
         <ul class="products-list">
             <li class="product-item" ng-repeat="product in products">
-                <div class="product-item-inner" data-id="{{product.id}}" data-ng-click="viewProduct()">
+                <div class="product-item-inner" data-id="{{product.id}}" data-ng-click="viewProduct(product.id)">
                     <div class="image-container">
                         <img class="image" data-ng-src="{{product.img}}" align="center" alt=""/>
                     </div>
@@ -257,7 +257,7 @@ BaseAsset::register($this);
 
 
 <!--PRODUCT VIEW-->
-<div id="product-view" class="popup active" ng-controller="productCtrl">
+<div id="product-view" class="popup" ng-controller="productCtrl">
     <div class="product-wrap popup-content">
         <div class="left-panel">
             <ul class="related-products-list purchased-together">
