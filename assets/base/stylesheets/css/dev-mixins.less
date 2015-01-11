@@ -10,6 +10,7 @@
 	-moz-transform: @string;
 	-ms-transform: @string;
 	-o-transform: @string;
+	transform : @string;
 }
 
 .scale (@factor) {
@@ -17,6 +18,7 @@
 	-moz-transform: scale(@factor);
 	-ms-transform: scale(@factor);
 	-o-transform: scale(@factor);
+	transform: scale(@factor);
 }
 
 .rotate (@deg) {
@@ -24,6 +26,7 @@
 	-moz-transform: rotate(@deg);
 	-ms-transform: rotate(@deg);
 	-o-transform: rotate(@deg);
+	transform: rotate(@deg);
 }
 
 .skew (@deg, @deg2) {
@@ -31,6 +34,7 @@
 	-moz-transform: skew(@deg, @deg2);
 	-ms-transform: skew(@deg, @deg2);
 	-o-transform: skew(@deg, @deg2);
+	transform: skew(@deg, @deg2);
 }
 
 .translate (@x, @y:0) {
@@ -38,6 +42,7 @@
 	-moz-transform: translate(@x, @y);
 	-ms-transform: translate(@x, @y);
 	-o-transform: translate(@x, @y);
+	transform: translate(@x, @y);
 }
 
 .translateY(@y:0) {
@@ -45,12 +50,14 @@
 	   -moz-transform: translateY(@y);
 		-ms-transform: translateY(@y);
 		 -o-transform: translateY(@y);
+		 transform: translateY(@y);
 }
 .translateX(@x:0) {
 	-webkit-transform: translateX(@x);
 	   -moz-transform: translateX(@x);
 	    -ms-transform: translateX(@x);
 		 -o-transform: translateX(@x);
+			transform: translateX(@x);
 }
 
 .translate3d (@x, @y: 0, @z: 0) {
@@ -58,6 +65,7 @@
 	-moz-transform: translate3d(@x, @y, @z);
 	-ms-transform: translate3d(@x, @y, @z);
 	-o-transform: translate3d(@x, @y, @z);
+		transform: translate3d(@x, @y, @z);
 }
 
 .transition (@transition) {
@@ -83,7 +91,9 @@
 	-moz-transition-delay: @delay;
 	-ms-transition-delay: @delay;
 	-o-transition-delay: @delay;
+	trasition-delay: @delay;
 }
+
 
 .box-shadow(@arguments) {
 	-webkit-box-shadow: @arguments;
@@ -101,4 +111,10 @@
 	-webkit-animation-delay: @delay;
 	   -moz-animation-delay: @delay;
 		   	animation-delay: @delay;
+}
+.perspective (@value: 1000px) {
+	-webkit-perspective: @value;
+   	   -moz-perspective: @value;
+ 	    -ms-perspective: @value;
+	        perspective: @value;
 }

@@ -54,11 +54,6 @@ BaseAsset::register($this);
     </div>
 
     <div id="products-list-wrap" ng-controller="catalogCtrl" load-products ng-init="init()">
-<!--        <div class="debug">-->
-<!--            <span id="pageCount">{{page}}</span>-->
-<!--            <span id="pageSize">{{pageSize}}</span>-->
-<!--        </div>-->
-
         <ul class="products-list">
             <li class="product-item" ng-repeat="product in products">
                 <div class="product-item-inner" data-id="{{product.id}}" data-ng-click="viewProduct()">
@@ -267,44 +262,50 @@ BaseAsset::register($this);
         <div class="left-panel">
             <ul class="related-products-list purchased-together">
                 <li class="related-product-item" ng-repeat="related in product.ordered">
-                    <img class="related-image" data-ng-src="{{related.image}}" alt="{{related.name}}"/>
+                    <img class="related-image" data-ng-src="{{related.img}}" alt="{{related.name}}"/>
                 </li>
             </ul>
         </div>
 
         <div class="middle-panel product-main-view">
-            <div class="product-image">
-                <img src="{{product.img}}" alt="product.name"/>
-            </div>
-            <div class="product-content">
-                <div class="product-heading">
-                    <h2 class="product-name">{{product.name}}</h2>
-                    <span class="price">{{product.price}}</span>
+            <div class="middle-panel-inner">
+                <div class="product-image">
+                    <img data-ng-src="{{product.img}}" alt="product.name"/>
                 </div>
-                <div class="product-body">
-                    <div class="description">
-                        {{product.desc}}
+
+                <div class="product-content">
+                    <div class="product-heading">
+                        <h2 class="product-name">{{product.name}}</h2>
+                        <span class="price">{{product.price}}</span>
                     </div>
-                    <div class="controls">
-                        <span class="buy-button" id="product-buy">buy</span>
-                        <span class="add-to-cart" id="product-add-to-cart">to cart</span>
-                    </div>
-                    <div class="recently-viewed">
-                        <ul class=" related-products-list recently-viewed-list">
-                            <li class="recently-viewed-item" ng-repeat="viewed in product.related">
-                                <img data-ng-src="{{viewed.image}}" alt="{{viewed.name}}"/>
-                            </li>
-                        </ul>
+                    <div class="product-body">
+                        <div class="description">
+                            {{product.desc}}
+                        </div>
+                        <div class="controls">
+                            <span class="buy-button" id="product-buy">buy</span>
+                            <span class="add-to-cart" id="product-add-to-cart">to cart</span>
+                        </div>
+                        <div class="recently-viewed" id="slider" ng-controller="sliderCtrl">
+                            <div class="arrow left" data-ng-click="prevSlide()"></div>
+                            <ul class="related-products-list recently-viewed-list">
+                                <li class="related-product-item recently-viewed-item" ng-repeat="related in product.related">
+                                    <img data-ng-src="{{related.img}}" alt="{{related.name}}"/>
+                                </li>
+                            </ul>
+                            <div class="arrow right" data-ng-click="nextSlide()"></div>
+                        </div>
                     </div>
                 </div>
             </div>
+
             <span class="close-button" title="Back to catalog"></span>
         </div>
 
         <div class="right-panel">
             <ul class="related-products-list added-together">
                 <li class="related-product-item" ng-repeat="related in product.carted">
-                    <img class="related-image" data-ng-src="{{related.image}}" alt="{{related.name}}"/>
+                    <img class="related-image" data-ng-src="{{related.img}}" alt="{{related.name}}"/>
                 </li>
             </ul>
         </div>
@@ -312,3 +313,33 @@ BaseAsset::register($this);
 </div>
 
 <div class="loader" id="loader"></div>
+
+<span class="button" style="position: fixed; top: 20px; right: 20px; color: red" onclick="toggleActive()">TOGGLE ACTIVE</span>
+
+<script>
+    var toggle = true;
+    function toggleActive() {
+//        var block = $('.middle-panel');
+        var block = $('#product-view');
+        if (toggle) {
+            block.addClass('active');
+//            block.transition({
+//                perspective: '900px',
+//                rotateX: '45deg',
+//                x: '-50%',
+//                y: '-50%',
+//                scale: ['1.7', '1.7']
+//            });
+        } else {
+            block.removeClass('active');
+//            block.transition({
+//                perspective: '900px',
+//                rotateX: '0deg',
+//                x: '-50%',
+//                y: '-50%',
+//                scale: ['1', '1']
+//            });
+        }
+        toggle = !toggle
+    }
+</script>

@@ -152,9 +152,19 @@ app.controller('productCtrl', ['$scope', function($scope) {
                 name: 'Perrelet P Pierre Lanier',
                 id: 4,
                 img: 'images/catalog/perrelet-a1047-2.jpg'
+            },
+            {
+                name: 'Perrelet P Pierre Lanier',
+                id: 4,
+                img: 'images/catalog/perrelet-a1047-2.jpg'
             }
         ],
         ordered: [
+            {
+                name: 'Perrelet P Pierre Lanier',
+                id: 4,
+                img: 'images/catalog/perrelet-a1047-2.jpg'
+            },
             {
                 name: 'Perrelet P Pierre Lanier',
                 id: 4,
@@ -176,6 +186,11 @@ app.controller('productCtrl', ['$scope', function($scope) {
         carted: [
             {
                 name: 'Perrelet P Pierre Lanier',
+                img: 'images/catalog/perrelet-a1047-2.jpg'
+            },
+            {
+                name: 'Perrelet P Pierre Lanier',
+                id: 4,
                 img: 'images/catalog/perrelet-a1047-2.jpg'
             },
             {
@@ -277,4 +292,14 @@ app.controller('checkoutCtrl', ['$scope', function($scope) {
     $scope.cancelCheckout = function () {
 
     };
+}]);
+
+app.controller('sliderCtrl', ['$scope', function ($scope) {
+    $scope.nextSlide = function() {
+
+    };
+
+    $scope.prevSlide = function () {
+
+    }
 }]);
