@@ -33,7 +33,7 @@ class OrderedProduct extends \yii\db\ActiveRecord
         where
         o2.product_id= $id
         and o1.product_id != $id";
-        return self::findBySql($sql)->asArray();
+        return self::findBySql($sql)->asArray(true)->all();
     }
 
     /**
