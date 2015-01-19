@@ -8,7 +8,6 @@
 	#main-menu {
 		@text-color: hsl(49, 2%, 47%);
 		background-color: #fff;
-//		height: @menu-normal-height;
 		width: 100%;
 		z-index: 30;
 
@@ -89,10 +88,10 @@
 					}
 				}
 				span.home-icon {
-					background: url('../../images/icons/homepage.png') no-repeat center;
+					background: url('/images/icons/homepage.png') no-repeat center;
 				}
 				span.cart-icon {
-					background-image: url('../../images/icons/header_cart.png');
+					background-image: url('/images/icons/header_cart.png');
 					background-position: 0 0;
 					&:hover {
 						background-position: -35px 0;
@@ -122,7 +121,7 @@
 						left: 5px;
 						height: 25px;
 						width: 25px;
-						background-image: url('../../images/icons/header_search.png');
+						background-image: url('/images/icons/header_search.png');
 						background-repeat: no-repeat;
 						background-position: -25px 0;
 						background-size: cover;
@@ -154,13 +153,13 @@
 
 	#products-list-wrap {
 		width: 1240px;
+		min-height: 500px;
+
 		margin: 20px auto;
-		height: 500px;
 
 		ul.products-list {
 			list-style: none;
 			padding: 0;
-			min-height: 540px;
 			margin: @margin 0;
 
 			.clearfix();

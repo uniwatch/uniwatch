@@ -2,15 +2,10 @@
 
 'use strict';
 
-function showPopup(popup) {
-    $('body').addClass('fixed');
-    $(popup).show();
-}
-
 app.directive('initPage', function() {
     return {
         restrict: 'A',
-        link: function() {
+        link: function($scope) {
 
             //this function used for improve scroll performance;
             function disableHoverOnScroll () {
@@ -34,22 +29,21 @@ app.directive('initPage', function() {
             function scrollToTop () {
                 setTimeout(function() {
                     // target, duration, options
-                    TweenLite.to(window, 0, {
-                        scrollTo : { y:0 },
-                        ease     : Power2.ease
-                    });
-                }, 200);
+                    TweenLite.to(window, 1, {scrollTo:{y:0}});
+                }, 400);
             }
 
             // add some scroll magic (http://janpaepke.github.io/ScrollMagic/)
             function initScrollPlugin() {
                 var controller = new ScrollMagic();
 
+                //scene for menu pin
                 var pin_scene = new ScrollScene({
                     triggerElement: '#catalog-page',
                     triggerHook: 0
                 }).setPin('#main-menu');
 
+                //scene for menu change style
                 var menu_scene = new ScrollScene({
                     triggerElement: '#main-menu',
                     triggerHook: 0,
@@ -58,8 +52,6 @@ app.directive('initPage', function() {
                 }).on('progress', menuUpdate);
 
                 controller.addScene([pin_scene, menu_scene]);
-                //console.log('123');
-
             }
 
             function menuUpdate(event) {
@@ -75,11 +67,21 @@ app.directive('initPage', function() {
                 logo.height(newH);
             }
 
+            function enableSmoothScroll() {
+                var platform = navigator.platform.toLowerCase();
+                if (platform.indexOf('win') == 0 || platform.indexOf('linux') == 0) {
+                    $.srSmoothscroll();
+                }
+            }
+
             $(function() {
+                //TODO: add site preloader
                 scrollToTop();
                 disableHoverOnScroll();
                 initScrollPlugin();
 
+                //TODO: add cross-browser smooth scrolling
+                //enableSmoothScroll();
             });
         }
     }
@@ -90,7 +92,6 @@ app.directive('windowResize', function() {
     return {
         restrict: 'A',
         link: function(scope) {
-            var height;
             var timer = 200,
                 timeout;
 
@@ -109,23 +110,59 @@ app.directive('windowResize', function() {
     }
 });
 
-app.directive('viewProduct', function() {
+app.directive('loadProducts', function() {
     return {
         restrict: 'A',
-        scope: true,
-        link: function(scope, element, attrs) {
+        link: function($scope) {
 
-            function view(prod_id) {
-                var data = scope.viewProduct(prod_id);
-                showPopup('#product-view');
-            }
+            var controller = new ScrollMagic();
 
-            element.on('click', function() {
-                view(attrs.viewProduct);
+            var load_scene = new ScrollScene({
+                triggerElement : "#load-trigger",
+                triggerHook    : 1,
+                duration: 100,
+                offset: -100
+            }).on('start', loadProducts);
+
+
+            controller.addScene(load_scene);
+
+            // adds special indicators thar show scroll scene start/stop
+            //load_scene.addIndicators({zindex: 100});
+
+            // update scroll scene after variable change
+            $scope.$watch('products', function() {
+                load_scene.update();
             });
+
+            function loadProducts(event) {
+                if (event.scrollDirection == "FORWARD") {
+                    $('#loader').addClass('active');
+                    $scope.loadProducts();
+                }
+            }
         }
     }
 });
+
+//app.directive('viewProduct', function() {
+//    return {
+//        restrict: 'A',
+//        scope: true,
+//        link: function(scope, element, attrs) {
+//
+//            function view(prod_id) {
+//                scope.viewProduct(prod_id);
+//
+//                showPopup('#product-view');
+//            }
+//
+//            element.on('click', function() {
+//                view(attrs.viewProduct);
+//            });
+//        }
+//    }
+//});
 
 app.directive('checkoutProduct', function() {
     return {
@@ -136,9 +173,3 @@ app.directive('checkoutProduct', function() {
         }
     }
 });
-
-//app.directive('cartProduct', function() {
-//    return {
-//        restri
-//    }
-//});

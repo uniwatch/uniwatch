@@ -48,6 +48,7 @@ if (YII_ENV_DEV) {
         'class' => yii\gii\Module::className(),
         'allowedIPs' => ['*'],
     ];
+    $config['components']['assetManager']['forceCopy'] = true;
 }
 
 return $config;
