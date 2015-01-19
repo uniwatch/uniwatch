@@ -26,7 +26,7 @@ class CheckoutController extends Controller
         $order->save();
         $model = new OrderedProduct();
         foreach($post['products'] as $product) {
-            $productAR = Product::findOne(['product_id' => $product['id']]);
+            $productAR = Product::findOne(['id' => $product['id']]);
             $productAR->orders += 1;
             $productAR->save();
 
