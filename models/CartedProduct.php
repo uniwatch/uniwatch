@@ -27,13 +27,15 @@ class CartedProduct extends \yii\db\ActiveRecord
     {
         $sql = "select
         distinct(o1.product_id) as product_id,
-        o1.name as name,
-        o1.desc as desc,
-        o1.img as img,
-        o1.price
+        p1.name as name,
+        p1.desc as desc,
+        p1.img as img,
+        p1.price
         from carted_product as o1
         left join carted_product as o2
-        on o2.track_id = o1.track_id
+            on o2.track_id = o1.track_id
+        inner join product as p1 on p1.id = o1.product_id
+
         where
         o2.product_id= $id
         and o1.product_id != $id";
