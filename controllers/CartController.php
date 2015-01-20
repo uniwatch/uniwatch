@@ -19,7 +19,7 @@ class CartController extends Controller
         $model = new CartedProduct();
         $model->product_id = $id;
         $model->quantity = 1;
-        $model->track_id = \Yii::$app->request->cookies['track_id'];
+        $model->track_id = \Yii::$app->request->cookies['track_id']->value;
         \Yii::$app->response->format = 'json';
         return $model->save();
     }

@@ -25,7 +25,12 @@ class CartedProduct extends \yii\db\ActiveRecord
 
     public static function getCartedWith($id)
     {
-        $sql = "select distinct(o1.product_id)
+        $sql = "select
+        distinct(o1.product_id) as product_id,
+        o1.name as name,
+        o1.desc as desc,
+        o1.img as img,
+        o1.price
         from carted_product as o1
         left join carted_product as o2
         on o2.track_id = o1.track_id
