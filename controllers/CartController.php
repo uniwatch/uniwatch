@@ -12,7 +12,7 @@ class CartController extends Controller
 
     public function actionAdditem($id)
     {
-        $product = Product::findOne(['product_id' => $id]);
+        $product = Product::findOne(['id' => $id]);
         $product->carts+=1;
         $product->save();
 
