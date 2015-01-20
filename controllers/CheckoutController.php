@@ -18,7 +18,7 @@ class CheckoutController extends Controller
         if(empty($post['products']) or !is_array($post['products']))
             return false;
         $order = new Order();
-        $order->track_id = $_COOKIE['track_id'];
+        $order->track_id = \Yii::$app->request->cookies['track_id']->value;
         $order->bill_fname = $post['bill_lname'];
         $order->bill_lname = $post['bill_fname'];
         $order->bill_email = $post['bill_email'];
@@ -33,7 +33,7 @@ class CheckoutController extends Controller
             $model->isNewRecord = true;
             $model->id=null;
             $model->order_id = $order->id;
-            $model->track_id = \Yii::$app->request->cookies['track_id'];
+            $model->track_id = \Yii::$app->request->cookies['track_id']->value;
             $model->product_id = $product['id'];
             $model->quantity = $product['quantity'];
             $model->save();
