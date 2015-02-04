@@ -4,6 +4,7 @@
 	background-image: url('/images/bg/product-bg.jpg');
 	background-repeat: no-repeat;
 	background-position: center center;
+	z-index: 99;
 	.background-size(cover);
 
 	&.active {
@@ -158,33 +159,9 @@
 							}
 						}
 					}
-					.recently-viewed {
-						ul.recently-viewed-list {
-							width: 100%;
-							padding: 10px;
-
-							border-radius: 5px;
-							border: 2.5pt solid #a6a6a6;
-							.clearfix();
-
-							&::before {
-								background-position: -85px -30px;
-							}
-
-							li.recently-viewed-item {
-								float: left;
-								position: relative;
-
-								img {
-									display: block;
-									position: absolute;
-									max-height: 150px;
-									width: auto;
-									top: 50%;
-									left: 50%;
-									.translate(-50%, -50%);
-								}
-							}
+					.recently-viewed .recently-viewed-list {
+						&::before {
+							background-position: -85px -30px;
 						}
 					}
 				}
@@ -241,32 +218,4 @@
 	}
 }
 
-#slider {
-	position: relative;
-	.arrow {
-		position: absolute;
-		top: 0;
-
-		display: block;
-		height: 100%;
-		width: 30px;
-
-		cursor: pointer;
-
-		background-image: url("/images/icons/product_sprite.png");
-		background-repeat: no-repeat;
-		background-position: 0 0;
-
-		&.left {
-			left: -33px;
-
-			background-position: -2px 50%;
-		}
-
-		&.right {
-			right: -33px;
-
-			background-position: -42px 50%;
-		}
-	}
-}
+@import "slider";

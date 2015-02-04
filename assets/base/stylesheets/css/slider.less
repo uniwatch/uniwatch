@@ -1,0 +1,72 @@
+@import "dev-mixins";
+
+slider {
+	position: relative;
+
+	.slider-wrap {
+		position: relative;
+		width: 100%;
+		height: 158px;
+
+		border-radius: 5px;
+		border: 4px solid #a6a6a6;
+		overflow: hidden;
+		background-color: #fff;
+
+		.slider-inner {
+			position: absolute;
+			left: 0;
+			top: 0;
+			list-style: none;
+			margin: 0;
+			padding: 0;
+
+			.clearfix();
+			.translate(0, 0);
+
+			.slider-item {
+				position: relative;
+				width: 150px;
+				height: 150px;
+				margin: 0 9px;
+				float: left;
+
+				img {
+					position: absolute;
+					display: block;
+					max-height: 150px;
+					width: auto;
+					top: 50%;
+					left: 50%;
+					.translate(-50%, -50%);
+				}
+			}
+		}
+	}
+	.arrow {
+		position: absolute;
+		top: 0;
+
+		display: block;
+		height: 100%;
+		width: 30px;
+
+		cursor: pointer;
+
+		background: url("/images/icons/product_sprite.png") no-repeat 0 0;
+
+		.transition(0.3s all ease-in-out);
+
+		&.left {
+			left: -33px;
+
+			background-position: -2px 50%;
+		}
+
+		&.right {
+			right: -33px;
+
+			background-position: -42px 50%;
+		}
+	}
+}

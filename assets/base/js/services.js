@@ -33,6 +33,9 @@ app.factory('uniService', ['$http', '$q', '$rootScope', function($http, $q, $roo
         return defer.promise;
     };
 
+    var product = {};
+    var cart = [];
+
     service = {
         viewProduct: function (id) {
             return makeRequest({
@@ -53,6 +56,36 @@ app.factory('uniService', ['$http', '$q', '$rootScope', function($http, $q, $roo
                     pageSize: pageSize
                 }
             })
+        },
+
+        addToCart: function(product_id) {
+            return makeRequest({
+                url: 'cart/additem',
+                method: 'GET',
+                data: {
+                    id: product_id
+                }
+            })
+        },
+
+        getCartData: function() {
+            return cart;
+        },
+
+        setCartData: function(value) {
+            if (typeof value == 'array') {
+                cart = value;
+            } else {
+                cart.push(value);
+            }
+        },
+
+        getProductData: function () {
+            return product;
+        },
+        
+        setProductData: function (value) {
+            product = value;
         }
     };
 

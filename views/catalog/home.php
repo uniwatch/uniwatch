@@ -46,16 +46,16 @@ BaseAsset::register($this);
                     </li>
                     <li class="menu-item">
                         <span class="cart-icon"></span>
-                        <span class="cart-count">1</span>
+                        <span class="cart-count">{{cartCount}}</span>
                     </li>
                 </ul>
             </div>
         </div>
     </div>
 
-    <div id="products-list-wrap" ng-controller="catalogCtrl" load-products ng-init="init()">
+    <div id="products-list-wrap" ng-controller="catalogCtrl" load-products ng-init="loadProducts()">
         <ul class="products-list">
-            <li class="product-item" ng-repeat="product in products">
+            <li class="product-item" ng-repeat="product in productsList">
                 <div class="product-item-inner" data-id="{{product.id}}" data-ng-click="viewProduct(product.id)">
                     <div class="image-container">
                         <img class="image" data-ng-src="{{product.img}}" align="center" alt=""/>
@@ -71,7 +71,7 @@ BaseAsset::register($this);
                         </div>
                         <div class="buttons">
                             <span class="view-product"></span>
-                            <span class="add-to-cart"></span>
+                            <span class="add-to-cart" data-ng-click="addToCart(product.id)"></span>
                         </div>
                     </div>
                 </div>
@@ -127,20 +127,20 @@ BaseAsset::register($this);
     <div class="cart-wrap popup-content">
         <div class="cart-products">
             <ul class="cart-products-list">
-                <li class="cart-product-item" ng-repeat="item in cart.items">
+                <li class="cart-product-item" ng-repeat="item in cart">
                     <div class="cart-product-image">
-                        <img data-ng-src="{{item.image}}" alt=""/>
+                        <img data-ng-src="{{item.img}}" alt=""/>
                     </div>
                     <div class="cart-product-body">
                         <div class="body-wrap">
                             <div class="name">{{item.name}}</div>
                             <div class="count">
-                                <label><input type="text" ng-value="{{item.count}}" pattern="[0-9]"/></label>
+                                <label><input type="text" pattern="[0-9]"/></label>
                             </div>
                             <div class="price">{{item.price}}</div>
                         </div>
                     </div>
-                    <span class="delete"></span>
+                    <span class="delete" ng-click="deleteItem()"></span>
                 </li>
             </ul>
         </div>
@@ -259,7 +259,7 @@ BaseAsset::register($this);
 <!--PRODUCT VIEW-->
 <div id="product-view" class="popup" ng-controller="productCtrl">
     <div class="product-wrap popup-content">
-        <div class="left-panel">
+        <div class="left-panel" ng-if="product.ordered.length">
             <ul class="related-products-list purchased-together">
                 <li class="related-product-item" ng-repeat="related in product.ordered">
                     <img class="related-image" data-ng-src="{{related.img}}" alt="{{related.name}}"/>
@@ -283,26 +283,18 @@ BaseAsset::register($this);
                             {{product.desc}}
                         </div>
                         <div class="controls">
-                            <span class="buy-button" id="product-buy">buy</span>
-                            <span class="add-to-cart" id="product-add-to-cart">to cart</span>
+                            <span class="buy-button" id="product-buy" ng-click="checkOut(product.id)">buy</span>
+                            <span class="add-to-cart" id="product-add-to-cart" ng-click="addToCart(product.id)">to cart</span>
                         </div>
-                        <div class="recently-viewed" id="slider" ng-controller="sliderCtrl">
-                            <div class="arrow left" data-ng-click="prevSlide()"></div>
-                            <ul class="related-products-list recently-viewed-list">
-                                <li class="related-product-item recently-viewed-item" ng-repeat="related in product.related">
-                                    <img data-ng-src="{{related.img}}" alt="{{related.name}}"/>
-                                </li>
-                            </ul>
-                            <div class="arrow right" data-ng-click="nextSlide()"></div>
-                        </div>
+                        <slider items-width="150" items="product.viewed"></slider>
                     </div>
                 </div>
             </div>
 
-            <span class="close-button" title="Back to catalog"></span>
+            <span class="close-button" title="Back to catalog" data-ng-click="hidePopup('#product-view')"></span>
         </div>
 
-        <div class="right-panel">
+        <div class="right-panel" ng-if="product.carted.length">
             <ul class="related-products-list added-together">
                 <li class="related-product-item" ng-repeat="related in product.carted">
                     <img class="related-image" data-ng-src="{{related.img}}" alt="{{related.name}}"/>
@@ -313,33 +305,34 @@ BaseAsset::register($this);
 </div>
 
 <div class="loader" id="loader"></div>
+<div id="tooltip"></div>
 
-<span class="button" style="position: fixed; top: 20px; right: 20px; color: red" onclick="toggleActive()">TOGGLE ACTIVE</span>
+<span class="button" style="position: fixed; top: 20px; right: 20px; color: red" ng-click="showTooltip('text')">TOGGLE ACTIVE</span>
 
-<script>
-    var toggle = true;
-    function toggleActive() {
-//        var block = $('.middle-panel');
-        var block = $('#product-view');
-        if (toggle) {
-            block.addClass('active');
-//            block.transition({
-//                perspective: '900px',
-//                rotateX: '45deg',
-//                x: '-50%',
-//                y: '-50%',
-//                scale: ['1.7', '1.7']
-//            });
-        } else {
-            block.removeClass('active');
-//            block.transition({
-//                perspective: '900px',
-//                rotateX: '0deg',
-//                x: '-50%',
-//                y: '-50%',
-//                scale: ['1', '1']
-//            });
-        }
-        toggle = !toggle
-    }
-</script>
+<!--<script>-->
+<!--    var toggle = true;-->
+<!--    function toggleActive() {-->
+<!--//        var block = $('.middle-panel');-->
+<!--        var block = $('#product-view');-->
+<!--        if (toggle) {-->
+<!--            block.addClass('active');-->
+<!--//            block.transition({-->
+<!--//                perspective: '900px',-->
+<!--//                rotateX: '45deg',-->
+<!--//                x: '-50%',-->
+<!--//                y: '-50%',-->
+<!--//                scale: ['1.7', '1.7']-->
+<!--//            });-->
+<!--        } else {-->
+<!--            block.removeClass('active');-->
+<!--//            block.transition({-->
+<!--//                perspective: '900px',-->
+<!--//                rotateX: '0deg',-->
+<!--//                x: '-50%',-->
+<!--//                y: '-50%',-->
+<!--//                scale: ['1', '1']-->
+<!--//            });-->
+<!--        }-->
+<!--        toggle = !toggle-->
+<!--    }-->
+<!--//<!--</script>-->

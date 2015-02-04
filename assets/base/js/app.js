@@ -1,11 +1,13 @@
 'use strict';
 /*global $:false, jQuery:false */
 
-var app = angular.module('app', []);
+var slider = angular.module('app.slider', []);
+
+var app = angular.module('app', ['app.slider', 'ngStorage']);
 
 
 
-app.controller('appCtrl', ['$scope', function($scope) {
+app.controller('appCtrl', ['$scope', '$localStorage', function($scope, $localStorage) {
     /**
      * Used to prevent double animation execution;
      * true if animation is running
@@ -18,9 +20,11 @@ app.controller('appCtrl', ['$scope', function($scope) {
 
     $scope.windowHeight = $(window).height();
 
-    $scope.product = [];
+    $scope.cartCount = 0;
 
-    $scope.products = [];
+    $scope.storage = $localStorage.$default({
+        cart: []
+    });
 
     /**
      * Detects scroll direction. You just need to pass scroll event;
@@ -30,6 +34,8 @@ app.controller('appCtrl', ['$scope', function($scope) {
     $scope.scrollDirection = function(event) {
         return !(event.originalEvent.wheelDelta >= 0);
     };
+
+    $scope.offsetY = 0;
 
     /**
      * Shows popup.
@@ -42,10 +48,13 @@ app.controller('appCtrl', ['$scope', function($scope) {
             $foot  = $('#footer');
 
         if ($popup.length) {
-            $body.addClass('fixed');
-            $('.popup').removeClass('active');
 
-            $popup.fadeIn('slow', function() {
+            $('.popup').removeClass('active');
+            $scope.offsetY = window.pageYOffset;
+
+            $popup.fadeIn(function() {
+                $body.addClass('fixed');
+                $body.css('top', $scope.offsetY);
                 $popup.addClass('active');
                 $menu.addClass('fixed');
                 $foot.addClass('fixed');
@@ -59,39 +68,75 @@ app.controller('appCtrl', ['$scope', function($scope) {
      * @param popup - jQuery selector
      */
     $scope.hidePopup = function(popup) {
-        var popupObj = $(popup);
+        var $popup = $(popup),
+            $body  = $('body'),
+            $menu  = $('#main-menu'),
+            $foot  = $('#footer'),
+            $win   = $(window);
 
-        if (arguments.length && popupObj.length) {
-            $('body').removeClass('fixed');
-            $(popup).removeClass('active');
+        if (arguments.length && $popup.length) {
+            $popup.removeClass('active');
         } else {
             $('.popup').removeClass('active');
         }
+
+        setTimeout(function() {
+            $popup.fadeOut();
+        }, 500);
+
+        setTimeout(function() {
+            $body.removeClass('fixed');
+            $body.css('top', $scope.offsetY);
+            $menu.removeClass('fixed');
+            $foot.removeClass('fixed');
+
+            $win.scrollTop($scope.offsetY);
+        }, 500);
     };
+
+    $scope.showTooltip = function(text) {
+        if (arguments.length) {
+            var tooltip = $('#tooltip');
+
+            if (tooltip.length) {
+                tooltip.text(text);
+                tooltip.fadeIn('slow');
+
+                setTimeout(function () {
+                    tooltip.fadeOut('slow');
+                }, 3000)
+            }
+        } else {
+            throw new Error('Invalid arguments passed');
+        }
+    };
+
+    $scope.showCart = function() {
+        $scope.showPopup('#cart');
+    }
 }]);
 
-app.controller('catalogCtrl', ['$scope', '$rootScope', 'uniService', function($scope, $rootScope, uniService) {
+app.controller('catalogCtrl', ['$scope', '$localStorage', 'uniService', function($scope, $localStorage, uniService) {
+    $scope.productsList = [];
+    $scope.productItem = {};
+
     $scope.page = 1;
     $scope.pageSize = 24;
 
-    $scope.init = function() {
-        //TODO: move this to YII model
-        uniService.getProducts($scope.page, $scope.pageSize).then(function(response) {
-            if (response.length) {
+    $scope.loadProducts = function (page, count) {
+        var pageNum, pageSize;
 
-                $rootScope.products = response;
-                $scope.page ++;
-            }
+        if (arguments.length) {
+            pageNum  = page;
+            pageSize = count;
+        } else {
+            pageNum  = $scope.page;
+            pageSize = $scope.pageSize;
+        }
 
-            $('#loader').removeClass('active');
-        });
-    };
-
-    $scope.loadProducts = function () {
-        uniService.getProducts($scope.page, $scope.pageSize).then(
-
-            function(response) { // success
-                console.log('page '+ $scope.page + ' loaded');
+        uniService.getProducts(pageNum, pageSize).then(
+            // request success
+            function(response) {
                 var products = response;
 
                 if (products.length) {
@@ -102,154 +147,114 @@ app.controller('catalogCtrl', ['$scope', '$rootScope', 'uniService', function($s
                 $('#loader').removeClass('active');
             },
 
-            function(error) { // error
+            // request error
+            function(error) {
                 console.log(error);
             }
         );
     };
 
     $scope.render = function(products) {
-        if ($scope.products.length) {
-            if (products.length) {
-                for(var i = 0; i < products.length; i++) {
-                    $scope.products.push(products[i]);
-                }
-            }
+        var count = $scope.productsList.length;
+
+        if (count > 0) {
+            $scope.productsList.concat(products);
+        } else {
+            $scope.productsList = products;
         }
     };
 
     $scope.viewProduct = function(id) {
         uniService.viewProduct(id).then(function(response) {
-            if (typeof response == 'object')  {
+            if (response)  {
                 $scope.showPopup('#product-view');
 
-                $scope.product = response;
+                $scope.productItem = response;
+
+                uniService.setProductData($scope.productItem);
             }
         });
     };
-}]);
 
-app.controller('productCtrl', ['$scope', function($scope) {
-    //$scope.product = {
-    //    name: 'Perrelet P Pierre Lanier',
-    //    price: '4500',
-    //    id: 1,
-    //    img: 'images/catalog/perrelet-a1047-2.jpg',
-    //    desc: 'Manufacturer: Switzerland / Movement: mechanical with automatic winding / Glass: sapphire / Type: Switches / Case : Steel / Water Resistant: 50m / Strap : Rubber / Style: Men',
-    //    related: [
-    //        {
-    //            name: 'Perrelet P Pierre Lanier',
-    //            id: 4,
-    //            img: 'images/catalog/perrelet-a1047-2.jpg'
-    //        },
-    //        {
-    //            name: 'Perrelet P Pierre Lanier',
-    //            id: 4,
-    //            img: 'images/catalog/perrelet-a1047-2.jpg'
-    //        },
-    //        {
-    //            name: 'Perrelet P Pierre Lanier',
-    //            id: 4,
-    //            img: 'images/catalog/perrelet-a1047-2.jpg'
-    //        },
-    //        {
-    //            name: 'Perrelet P Pierre Lanier',
-    //            id: 4,
-    //            img: 'images/catalog/perrelet-a1047-2.jpg'
-    //        }
-    //    ],
-    //    ordered: [
-    //        {
-    //            name: 'Perrelet P Pierre Lanier',
-    //            id: 4,
-    //            img: 'images/catalog/perrelet-a1047-2.jpg'
-    //        },
-    //        {
-    //            name: 'Perrelet P Pierre Lanier',
-    //            id: 4,
-    //            img: 'images/catalog/perrelet-a1047-2.jpg'
-    //        },
-    //        {
-    //            name: 'Perrelet P Pierre Lanier',
-    //            id: 4,
-    //            img: 'images/catalog/perrelet-a1047-2.jpg'
-    //        },
-    //        {
-    //            name: 'Perrelet P Pierre Lanier',
-    //            price: '4500',
-    //            id: 4,
-    //            currency: '$',
-    //            img: 'images/catalog/perrelet-a1047-2.jpg'
-    //        }
-    //    ],
-    //    carted: [
-    //        {
-    //            name: 'Perrelet P Pierre Lanier',
-    //            img: 'images/catalog/perrelet-a1047-2.jpg'
-    //        },
-    //        {
-    //            name: 'Perrelet P Pierre Lanier',
-    //            id: 4,
-    //            img: 'images/catalog/perrelet-a1047-2.jpg'
-    //        },
-    //        {
-    //            name: 'Perrelet P Pierre Lanier',
-    //            id: 4,
-    //            img: 'images/catalog/perrelet-a1047-2.jpg'
-    //        },
-    //        {
-    //            name: 'Perrelet P Pierre Lanier',
-    //            id: 4,
-    //            img: 'images/catalog/perrelet-a1047-2.jpg'
-    //        }
-    //    ]
-    //};
+    $scope.addToCart = function(id) {
+        uniService.addToCart(id).then(function (response) {
+            if (response) {
 
-    $scope.view = function(productID) {
+                uniService.setCartData();
+
+                console.log('Success'. $scope.productItem.id);
+            }
+        });
+    };
+
+    $scope.checkout = function(id) {
 
     }
 }]);
 
-app.controller('cartCtrl', ['$scope', function($scope) {
-    $scope.cart = {
-        items: [
-            {
-                name: 'Perrelet P Pierre Lanier',
-                price: '4500',
-                id: 1,
-                count: 2,
-                currency: '$',
-                img: 'images/catalog/perrelet-a1047-2.jpg'
+app.controller('productCtrl', ['$scope', 'uniService', function($scope, uniService) {
+    $scope.product = {};
+
+    $scope.$watch(function () {return uniService.getProductData();}, function (newValue, oldValue) {
+        if (newValue != null) {
+            //update Controller2's xxx value
+            $scope.product= newValue;
+        } else {
+            $scope.product = {};
+        }
+    }, true);
+
+    $scope.addToCart = function(id) {
+        uniService.addToCart(id).then(
+            // success
+            function (response) {
+                if (response) {
+                    uniService.setCartData($scope.product);
+                    $scope.showTooltip('Successfully added to cart.');
+                }
             },
-            {
-                name: 'Perrelet P Pierre Lanier',
-                price: '4500',
-                id: 2,
-                count: 3,
-                currency: '$',
-                image: 'images/catalog/perrelet-a1047-2.jpg'
-            },
-            {
-                name: 'Perrelet P Pierre Lanier',
-                price: '4500',
-                id: 3,
-                count: 4,
-                currency: '$',
-                image: 'images/catalog/perrelet-a1047-2.jpg'
+            // error
+            function() {
+                $scope.showTooltip('Internal server error.');
+
             }
-        ]
+        );
     };
+
+    $scope.checkout = function(id) {
+        console.log('checkout');
+    }
+}]);
+
+app.controller('cartCtrl', ['$scope', '$localStorage', '$rootScope', 'uniService', function ($scope, $localStorage, $rootScope, uniService) {
+    $scope.cart = [];
+
+
+
+    $scope.$watch(function () {return uniService.getCartData();}, function (newVal, oldVal) {
+        if (newVal != null) {
+            $scope.cart = newVal;
+        } else {
+            $scope.cart = [];
+        }
+
+        if ($scope.cart.length > 0) {
+            $rootScope.$apply(function() {
+                $rootScope.cartCount = $scope.cart.length;
+            });
+        }
+    });
 
 
     $scope.addItem = function () {
-
+        console.log('add item');
     };
 
     $scope.deleteItem = function () {
-
+        console.log('delete item')
     };
 
-    $scope.refreshCart = function() {
+    $scope.changeAmount = function () {
 
     };
 }]);
@@ -291,14 +296,4 @@ app.controller('checkoutCtrl', ['$scope', function($scope) {
     $scope.cancelCheckout = function () {
 
     };
-}]);
-
-app.controller('sliderCtrl', ['$scope', function ($scope) {
-    $scope.nextSlide = function() {
-
-    };
-
-    $scope.prevSlide = function () {
-
-    }
 }]);

@@ -1,0 +1,13 @@
+<div class="recently-viewed" id="slider">
+    <div class="arrow left" ng-show="left" data-ng-click="prevSlide()"></div>
+
+    <div class="related-products-list recently-viewed-list slider-wrap">
+        <ul class="slider-inner">
+            <li class="slider-item related-product-item recently-viewed-item" ng-repeat="related in items">
+                <img data-ng-src="{{related.img}}" alt="{{related.name}}"/>
+            </li>
+        </ul>
+    </div>
+
+    <div class="arrow right" ng-show="right" data-ng-click="nextSlide()"></div>
+</div>
