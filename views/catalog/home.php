@@ -44,9 +44,9 @@ BaseAsset::register($this);
                             <input type="text" class="search-input"/>
                         </label>
                     </li>
-                    <li class="menu-item">
+                    <li class="menu-item" id="cart-button" ng-click="showCart()">
                         <span class="cart-icon"></span>
-                        <span class="cart-count">{{cartCount}}</span>
+                        <span class="cart-count">{{storage.cart.length}}</span>
                     </li>
                 </ul>
             </div>
@@ -56,7 +56,7 @@ BaseAsset::register($this);
     <div id="products-list-wrap" ng-controller="catalogCtrl" load-products ng-init="loadProducts()">
         <ul class="products-list">
             <li class="product-item" ng-repeat="product in productsList">
-                <div class="product-item-inner" data-id="{{product.id}}" data-ng-click="viewProduct(product.id)">
+                <div class="product-item-inner" data-id="{{product.id}}" data-ng-click="viewProduct(product.id, $event)">
                     <div class="image-container">
                         <img class="image" data-ng-src="{{product.img}}" align="center" alt=""/>
                     </div>
@@ -66,12 +66,12 @@ BaseAsset::register($this);
                                 <span class="name">{{product.name}}</span>
                             </div>
                             <div class="price-container">
-                                <span class="price">{{product.price + product.currency}}</span>
+                                <span class="price">{{product.price | currency}}</span>
                             </div>
                         </div>
                         <div class="buttons">
-                            <span class="view-product"></span>
-                            <span class="add-to-cart" data-ng-click="addToCart(product.id)"></span>
+                            <span class="view-product" title="View"></span>
+                            <span class="add-to-cart" title="To cart" data-ng-click="addToCart(product.id, $event)"></span>
                         </div>
                     </div>
                 </div>
@@ -124,10 +124,10 @@ BaseAsset::register($this);
 
 <!--CART-->
 <div id="cart" class="popup" ng-controller="cartCtrl">
-    <div class="cart-wrap popup-content">
+    <div class="cart-wrap popup-content" ng-if="storage.cart.length">
         <div class="cart-products">
             <ul class="cart-products-list">
-                <li class="cart-product-item" ng-repeat="item in cart">
+                <li class="cart-product-item" ng-repeat="item in storage.cart">
                     <div class="cart-product-image">
                         <img data-ng-src="{{item.img}}" alt=""/>
                     </div>
@@ -135,29 +135,35 @@ BaseAsset::register($this);
                         <div class="body-wrap">
                             <div class="name">{{item.name}}</div>
                             <div class="count">
-                                <label><input type="text" pattern="[0-9]"/></label>
+                                <label><input type="number" ng-model="item.count" ng-required pattern="[0-9]"/></label>
                             </div>
-                            <div class="price">{{item.price}}</div>
+                            <div class="price">{{item.price * item.count | currency}}</div>
                         </div>
                     </div>
-                    <span class="delete" ng-click="deleteItem()"></span>
+                    <span class="delete" ng-click="removeItem($index)"></span>
                 </li>
             </ul>
         </div>
+
         <div class="cart-total">
             <div class="total-count">
                 <div class="text-wrap"><span class="text">Total items</span></div>
-                <div class="number-wrap"><span class="number">20</span></div>
+                <div class="number-wrap"><span class="number">{{total().count}}</span></div>
             </div>
             <div class="total-price">
                 <div class="text-wrap"><span class="text">Order total</span></div>
-                <div class="number-wrap"><span class="number">$ 4000</span></div>
+                <div class="number-wrap"><span class="number">{{total().price | currency}}</span></div>
             </div>
         </div>
+
         <div class="cart-controls">
-            <span class="back-to-catalog" id="cartClose"></span>
-            <span class="checkout" id="cartProceed"></span>
+            <span class="back-to-catalog" id="cartClose" ng-click="closeCart()"></span>
+            <span class="checkout" id="cartProceed" ng-click="checkout()"></span>
         </div>
+    </div>
+
+    <div class="cart-wrap popup-content" ng-if="!storage.cart.length">
+        <h4 class="heading">There is no items in cart.</h4>
     </div>
 </div>
 <!--CART-->
@@ -207,7 +213,7 @@ BaseAsset::register($this);
                         <h3 class="heading">your order</h3>
                     </div>
                     <ul class="order-items-list">
-                        <li class="order-item" ng-repeat="item in checkout.items">
+                        <li class="order-item" ng-repeat="item in checkout">
                             <div class="item-image">
                                 <img data-ng-src="{{item.image}}" alt=""/>
                             </div>
@@ -216,7 +222,7 @@ BaseAsset::register($this);
                                     <div class="name"><span>{{item.name}}</span></div>
                                     <div class="count">
                                         <label><input type="number" name="product.count" value="{{item.count}}"/></label></div>
-                                    <div class="price"><span>{{item.price}}</span></div>
+                                    <div class="price"><span>{{item.price | currency}}</span></div>
                                 </div>
                             </div>
                             <span class="delete-order-item"></span>
@@ -276,7 +282,7 @@ BaseAsset::register($this);
                 <div class="product-content">
                     <div class="product-heading">
                         <h2 class="product-name">{{product.name}}</h2>
-                        <span class="price">{{product.price}}</span>
+                        <span class="price">{{product.price | currency}}</span>
                     </div>
                     <div class="product-body">
                         <div class="description">

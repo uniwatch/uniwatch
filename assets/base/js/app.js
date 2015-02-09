@@ -20,11 +20,12 @@ app.controller('appCtrl', ['$scope', '$localStorage', function($scope, $localSto
 
     $scope.windowHeight = $(window).height();
 
-    $scope.cartCount = 0;
-
     $scope.storage = $localStorage.$default({
         cart: []
     });
+
+    $scope.cartCount = $scope.storage.cart.length;
+
 
     /**
      * Detects scroll direction. You just need to pass scroll event;
@@ -111,9 +112,20 @@ app.controller('appCtrl', ['$scope', '$localStorage', function($scope, $localSto
         }
     };
 
+    /**
+     * Show cart popup;
+     */
     $scope.showCart = function() {
         $scope.showPopup('#cart');
-    }
+    };
+
+    /**
+     * Close cart popup;
+     */
+    $scope.closeCart = function() {
+        $scope.hidePopup('#cart');
+    };
+
 }]);
 
 app.controller('catalogCtrl', ['$scope', '$localStorage', 'uniService', function($scope, $localStorage, uniService) {
@@ -164,27 +176,68 @@ app.controller('catalogCtrl', ['$scope', '$localStorage', 'uniService', function
         }
     };
 
-    $scope.viewProduct = function(id) {
+    $scope.viewProduct = function(id, event) {
         uniService.viewProduct(id).then(function(response) {
             if (response)  {
-                $scope.showPopup('#product-view');
 
                 $scope.productItem = response;
 
                 uniService.setProductData($scope.productItem);
+
+                var target = $(event.target),
+                    isProductItem = target.hasClass('product-item-inner');
+
+                // show product popup only if we click on it
+                // but not when we try to add to cart or checkout
+                if (isProductItem) {
+                    $scope.showPopup('#product-view');
+                }
+            } else {
+                $scope.showTooltip('Internal server error.')
             }
         });
     };
 
-    $scope.addToCart = function(id) {
-        uniService.addToCart(id).then(function (response) {
-            if (response) {
+    /**
+     * Add product to cart from main(catalog) page.
+     * @param id
+     * @param event
+     */
+    $scope.addToCart = function(id, event) {
 
-                uniService.setCartData();
 
-                console.log('Success'. $scope.productItem.id);
+        var productsList = $scope.productsList;
+
+        // we should get product data before add to cart
+        var product      = uniService.getStoredProduct(id, productsList);
+
+        uniService.addToCartAjax(id).then(ajaxCallback);
+
+        function ajaxCallback(response) {
+            if (response == 'true') {
+                var cart    = $scope.storage.cart;
+
+                if (product != null) {
+                    if (cart.length > 0) {
+                        var sameProduct = uniService.findProductInCart(product, cart);
+
+                        if (sameProduct != null) {
+                            uniService.incrCountInCart(sameProduct, cart);
+                        } else {
+                            product.count = 1;
+                            $scope.storage.cart.push(product);
+                        }
+                    } else {
+                        product.count = 1;
+                        $scope.storage.cart.push(product);
+                    }
+                }
+
+                $scope.showTooltip('Successfully added to cart.');
+            } else {
+                $scope.showTooltip('Internal server error.')
             }
-        });
+        }
     };
 
     $scope.checkout = function(id) {
@@ -204,21 +257,37 @@ app.controller('productCtrl', ['$scope', 'uniService', function($scope, uniServi
         }
     }, true);
 
+    /**
+     * Add to cart from product page.
+     * @param id
+     */
     $scope.addToCart = function(id) {
-        uniService.addToCart(id).then(
-            // success
-            function (response) {
-                if (response) {
-                    uniService.setCartData($scope.product);
-                    $scope.showTooltip('Successfully added to cart.');
-                }
-            },
-            // error
-            function() {
-                $scope.showTooltip('Internal server error.');
+        uniService.addToCartAjax(id).then(ajaxCallback);
 
+        function ajaxCallback(response) {
+            if (response == 'true') {
+                var cart    = $scope.storage.cart,
+                    product = $scope.productItem;
+
+                if (cart.length > 0) {
+                    var sameProduct = uniService.findProductInCart(product, cart);
+
+                    if (sameProduct != null) {
+                        uniService.incrCountInCart(sameProduct, cart);
+                    } else {
+                        product.count = 1;
+                        $scope.storage.cart.push(product);
+                    }
+                } else {
+                    product.count = 1;
+                    $scope.storage.cart.push(product);
+                }
+
+                $scope.showTooltip('Successfully added to cart.');
+            } else {
+                $scope.showTooltip('Internal server error.')
             }
-        );
+        }
     };
 
     $scope.checkout = function(id) {
@@ -226,40 +295,35 @@ app.controller('productCtrl', ['$scope', 'uniService', function($scope, uniServi
     }
 }]);
 
-app.controller('cartCtrl', ['$scope', '$localStorage', '$rootScope', 'uniService', function ($scope, $localStorage, $rootScope, uniService) {
-    $scope.cart = [];
+app.controller('cartCtrl', ['$scope', 'uniService', function ($scope, uniService) {
+    $scope.cart = $scope.storage.cart;
 
-
-
-    $scope.$watch(function () {return uniService.getCartData();}, function (newVal, oldVal) {
-        if (newVal != null) {
-            $scope.cart = newVal;
-        } else {
-            $scope.cart = [];
-        }
-
-        if ($scope.cart.length > 0) {
-            $rootScope.$apply(function() {
-                $rootScope.cartCount = $scope.cart.length;
-            });
-        }
-    });
+    $scope.totalCount = uniService.cartTotals($scope.cart).count;
+    $scope.totalPrice = uniService.cartTotals($scope.cart).price;
 
 
     $scope.addItem = function () {
         console.log('add item');
     };
 
-    $scope.deleteItem = function () {
-        console.log('delete item')
+    $scope.removeItem = function(index) {
+        $scope.cart.splice(index, 1);
     };
 
-    $scope.changeAmount = function () {
+    $scope.total = function() {
+        return uniService.cartTotals($scope.cart);
+    };
 
+    $scope.checkout = function() {
+        $scope.showPopup('#checkout');
+
+        uniService.setCheckoutData($scope.cart);
     };
 }]);
 
-app.controller('checkoutCtrl', ['$scope', function($scope) {
+app.controller('checkoutCtrl', ['$scope', 'uniService', function($scope, uniService) {
+    $scope.checkout = uniService.getCheckoutData();
+
     $scope.checkout = {
         items: [
             {
