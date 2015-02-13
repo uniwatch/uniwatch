@@ -41,7 +41,7 @@ BaseAsset::register($this);
                     </li>
                     <li class="menu-item">
                         <label>
-                            <input type="text" class="search-input"/>
+                            <input type="text" ng-model="search" class="search-input"/>
                         </label>
                     </li>
                     <li class="menu-item" id="cart-button" ng-click="showCart()">
@@ -55,7 +55,7 @@ BaseAsset::register($this);
 
     <div id="products-list-wrap" ng-controller="catalogCtrl" load-products ng-init="loadProducts()">
         <ul class="products-list">
-            <li class="product-item" ng-repeat="product in productsList">
+            <li class="product-item" ng-repeat="product in productsList | filter:search">
                 <div class="product-item-inner" data-id="{{product.id}}" data-ng-click="viewProduct(product.id, $event)">
                     <div class="image-container">
                         <img class="image" data-ng-src="{{product.img}}" align="center" alt=""/>
@@ -171,72 +171,74 @@ BaseAsset::register($this);
 <!--CHECKOUT-->
 <div id="checkout" class="popup" ng-controller="checkoutCtrl">
     <div class="checkout-wrap popup-content">
-        <div class="checkout-heading">
-            <h1 class="heading">secure checkout</h1>
-        </div>
-        <div class="checkout-body">
-            <div class="order-form">
-                <form action="" method="POST" name="checkoutForm" id="checkoutForm">
-                    <div class="form-row">
-                        <label class="first-name-text">first name <input type="text" name="firstName" class="first-name"/></label>
-                    </div>
-                    <div class="form-row">
-                        <label class="last-name-text">last name <input type="text" name="lastName" class="last-name"/></label>
-                    </div>
-                    <div class="form-row">
-                        <label class="phone-text">phone <input type="text" name="phone" class="phone"/></label>
-                    </div>
-                    <div class="form-row">
-                        <label class="email-text">email <input type="text" name="email" class="email"/></label>
-                    </div>
-                    <div class="form-row">
-                        <label class="city-text">city <input type="text" name="city" class="city"/></label>
-                    </div>
-                    <div class="form-row">
-                        <label class="address-text">address <input type="text" name="address" class="address"/></label>
-                    </div>
-                    <div class="form-row bigger-margin">
-                        <label class="phone-text">phone <input type="text" name="phone" class="phone"/></label>
-                    </div>
-                    <div class="form-row">
-                        <label class="comment-text">comment <textarea name="comment" class="comment" cols="30" rows="10"></textarea></label>
-                    </div>
-                    <div class="form-row submit-button">
-                        <button type="submit" id="submitOrder"></button>
-                    </div>
-                </form>
+        <div class="checkout-content">
+            <div class="checkout-heading">
+                <h1 class="heading">secure checkout</h1>
             </div>
-
-            <div class="order-details">
-                <div class="order-items-wrap">
-                    <div class="details-heading">
-                        <h3 class="heading">your order</h3>
-                    </div>
-                    <ul class="order-items-list">
-                        <li class="order-item" ng-repeat="item in checkout">
-                            <div class="item-image">
-                                <img data-ng-src="{{item.image}}" alt=""/>
-                            </div>
-                            <div class="item-body">
-                                <div class="item-body-wrap">
-                                    <div class="name"><span>{{item.name}}</span></div>
-                                    <div class="count">
-                                        <label><input type="number" name="product.count" value="{{item.count}}"/></label></div>
-                                    <div class="price"><span>{{item.price | currency}}</span></div>
-                                </div>
-                            </div>
-                            <span class="delete-order-item"></span>
-                        </li>
-                    </ul>
+            <div class="checkout-body">
+                <div class="order-form">
+                    <form action="" method="POST" name="checkoutForm" id="checkoutForm">
+                        <div class="form-row">
+                            <label class="first-name-text">first name <input type="text" name="firstName" class="first-name"/></label>
+                        </div>
+                        <div class="form-row">
+                            <label class="last-name-text">last name <input type="text" name="lastName" class="last-name"/></label>
+                        </div>
+                        <div class="form-row">
+                            <label class="phone-text">phone <input type="text" name="phone" class="phone"/></label>
+                        </div>
+                        <div class="form-row">
+                            <label class="email-text">email <input type="text" name="email" class="email"/></label>
+                        </div>
+                        <div class="form-row">
+                            <label class="city-text">city <input type="text" name="city" class="city"/></label>
+                        </div>
+                        <div class="form-row">
+                            <label class="address-text">address <input type="text" name="address" class="address"/></label>
+                        </div>
+                        <div class="form-row bigger-margin">
+                            <label class="phone-text">phone <input type="text" name="phone" class="phone"/></label>
+                        </div>
+                        <div class="form-row">
+                            <label class="comment-text">comment <textarea name="comment" class="comment" cols="30" rows="10"></textarea></label>
+                        </div>
+                        <div class="form-row submit-button">
+                            <button type="button" id="submitOrder" ng-click="proceedCheckout()"></button>
+                        </div>
+                    </form>
                 </div>
-                <div class="order-amount">
-                    <div class="total-count">
-                        <span class="text"></span>
-                        <span class="count"></span>
+
+                <div class="order-details">
+                    <div class="order-items-wrap">
+                        <div class="details-heading">
+                            <h3 class="heading">your order</h3>
+                        </div>
+                        <ul class="order-items-list">
+                            <li class="order-item" ng-repeat="item in checkout">
+                                <div class="item-image">
+                                    <img data-ng-src="{{item.img}}" alt=""/>
+                                </div>
+                                <div class="item-body">
+                                    <div class="item-body-wrap">
+                                        <div class="name"><span>{{item.name}}</span></div>
+                                        <div class="count">
+                                            <label><input type="number" name="product.count" value="{{item.count}}"/></label></div>
+                                        <div class="price"><span>{{item.price | currency}}</span></div>
+                                    </div>
+                                </div>
+                                <span class="delete-order-item"></span>
+                            </li>
+                        </ul>
                     </div>
-                    <div class="total-price">
-                        <span class="text"></span>
-                        <span class="count"></span>
+                    <div class="order-amount">
+                        <div class="total-count">
+                            <span class="text"></span>
+                            <span class="count"></span>
+                        </div>
+                        <div class="total-price">
+                            <span class="text"></span>
+                            <span class="count"></span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -249,14 +251,16 @@ BaseAsset::register($this);
 <!--THANK YOU PAGE-->
 <div id="thank-you" class="popup">
     <div class="thank-you-wrap popup-content">
-        <h2 class="thank-heading">thank you</h2>
-        <div class="thank-body">
-            <h3 class="thank-text">your order has been proceeded</h3>
-            <div class="thank-logo">
-                <img src="" alt="Be in time"/>
+        <div class="popup-inner">
+            <h2 class="thank-heading">thank you</h2>
+            <div class="thank-body">
+                <h3 class="thank-text">your order has been proceeded</h3>
+                <div class="thank-logo">
+                    <img src="/images/icons/logo_header_default.png" alt="Be in time"/>
+                </div>
             </div>
+            <span class="close-button" ng-click="hideThankYou()"></span>
         </div>
-        <span class="close-button"></span>
     </div>
 </div>
 <!--THANK YOU PAGE-->
@@ -313,7 +317,7 @@ BaseAsset::register($this);
 <div class="loader" id="loader"></div>
 <div id="tooltip"></div>
 
-<span class="button" style="position: fixed; top: 20px; right: 20px; color: red" ng-click="showTooltip('text')">TOGGLE ACTIVE</span>
+<span class="button" style="position: fixed; top: 20px; right: 20px; color: red" ng-click="showThankYou()">TOGGLE ACTIVE</span>
 
 <!--<script>-->
 <!--    var toggle = true;-->

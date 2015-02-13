@@ -131,6 +131,16 @@ app.factory('uniService', ['$http', '$q', '$rootScope', '$localStorage', functio
             }
         },
 
+        submitCheckout: function(products) {
+            return makeRequest({
+                url: 'checkout/proceed',
+                method: 'POST',
+                data: {
+                    products: products
+                }
+            });
+        },
+
         /**
          * Check if there is same products already added to cart.
          * @param product

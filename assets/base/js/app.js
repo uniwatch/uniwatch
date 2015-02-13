@@ -49,7 +49,6 @@ app.controller('appCtrl', ['$scope', '$localStorage', function($scope, $localSto
             $foot  = $('#footer');
 
         if ($popup.length) {
-
             $('.popup').removeClass('active');
             $scope.offsetY = window.pageYOffset;
 
@@ -109,6 +108,41 @@ app.controller('appCtrl', ['$scope', '$localStorage', function($scope, $localSto
             }
         } else {
             throw new Error('Invalid arguments passed');
+        }
+    };
+
+    $scope.showThankYou = function() {
+        var $popup = $('#thank-you'),
+            $body = $('body');
+
+        if ($popup.length) {
+            $popup.fadeIn(function() {
+                $body.addClass('fixed');
+            });
+
+            $popup.addClass('active');
+        }
+
+        setTimeout(function() {
+            $scope.hideThankYou();
+        }, 3000);
+    };
+
+    $scope.hideThankYou = function() {
+        var $popup = $('#thank-you'),
+            $body = $('body');
+
+        if ($popup.length) {
+            var isActive = $popup.hasClass('active');
+
+            if (isActive) {
+                $popup.removeClass('active');
+                $popup.fadeOut();
+
+                setTimeout(function() {
+                    $body.removeClass('fixed');
+                }, 500);
+            }
         }
     };
 
@@ -184,7 +218,7 @@ app.controller('catalogCtrl', ['$scope', '$localStorage', 'uniService', function
 
                 uniService.setProductData($scope.productItem);
 
-                var target = $(event.target),
+                var target = $(event.currentTarget),
                     isProductItem = target.hasClass('product-item-inner');
 
                 // show product popup only if we click on it
@@ -209,13 +243,13 @@ app.controller('catalogCtrl', ['$scope', '$localStorage', 'uniService', function
         var productsList = $scope.productsList;
 
         // we should get product data before add to cart
-        var product      = uniService.getStoredProduct(id, productsList);
+        var product = uniService.getStoredProduct(id, productsList);
 
         uniService.addToCartAjax(id).then(ajaxCallback);
 
         function ajaxCallback(response) {
             if (response == 'true') {
-                var cart    = $scope.storage.cart;
+                var cart = $scope.storage.cart;
 
                 if (product != null) {
                     if (cart.length > 0) {
@@ -246,7 +280,11 @@ app.controller('catalogCtrl', ['$scope', '$localStorage', 'uniService', function
 }]);
 
 app.controller('productCtrl', ['$scope', 'uniService', function($scope, uniService) {
-    $scope.product = {};
+    $scope.product = {
+        ordered: [],
+        carted: [],
+        viewed: []
+    };
 
     $scope.$watch(function () {return uniService.getProductData();}, function (newValue, oldValue) {
         if (newValue != null) {
@@ -267,7 +305,7 @@ app.controller('productCtrl', ['$scope', 'uniService', function($scope, uniServi
         function ajaxCallback(response) {
             if (response == 'true') {
                 var cart    = $scope.storage.cart,
-                    product = $scope.productItem;
+                    product = $scope.product;
 
                 if (cart.length > 0) {
                     var sameProduct = uniService.findProductInCart(product, cart);
@@ -285,14 +323,10 @@ app.controller('productCtrl', ['$scope', 'uniService', function($scope, uniServi
 
                 $scope.showTooltip('Successfully added to cart.');
             } else {
-                $scope.showTooltip('Internal server error.')
+                $scope.showTooltip('Internal server error.');
             }
         }
     };
-
-    $scope.checkout = function(id) {
-        console.log('checkout');
-    }
 }]);
 
 app.controller('cartCtrl', ['$scope', 'uniService', function ($scope, uniService) {
@@ -322,38 +356,25 @@ app.controller('cartCtrl', ['$scope', 'uniService', function ($scope, uniService
 }]);
 
 app.controller('checkoutCtrl', ['$scope', 'uniService', function($scope, uniService) {
-    $scope.checkout = uniService.getCheckoutData();
+    $scope.checkout = [];
 
-    $scope.checkout = {
-        items: [
-            {
-                name: 'Perrelet P Pierre Lanier',
-                price: '4500',
-                id: 1,
-                count: 2,
-                currency: '$',
-                img: 'images/catalog/perrelet-a1047-2.jpg'
-            },
-            {
-                name: 'Perrelet P Pierre Lanier',
-                price: '4500',
-                id: 2,
-                count: 3,
-                currency: '$',
-                img: 'images/catalog/perrelet-a1047-2.jpg'
-            },
-            {
-                name: 'Perrelet P Pierre Lanier',
-                price: '4500',
-                id: 3,
-                count: 4,
-                currency: '$',
-                img: 'images/catalog/perrelet-a1047-2.jpg'
-            }
-        ]
-    };
+    $scope.$watch(function() {return uniService.getCheckoutData()}, function(newVal, oldVal) {
+        if (newVal != null) {
+            $scope.checkout = newVal;
+        }
+    });
 
     $scope.proceedCheckout = function () {
+        uniService.submitCheckout($scope.checkout).then(function(response) {
+            console.log(response);
+        });
+    };
+
+    $scope.total = function() {
+
+    };
+
+    $scope.deleteItem = function() {
 
     };
 
