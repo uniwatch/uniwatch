@@ -41,57 +41,126 @@ app.controller('appCtrl', ['$scope', '$localStorage', function($scope, $localSto
     /**
      * Shows popup.
      * @param popup - jQuery selector
+     * @param onComplete
      */
-    $scope.showPopup = function(popup) {
+    $scope.showPopup = function(popup, onComplete) {
+        var $body = $('body'),
+            $menu = $('#main-menu');
+
         var $popup = $(popup),
-            $body  = $('body'),
-            $menu  = $('#main-menu'),
-            $foot  = $('#footer');
+            overlay;
+
+        $scope.offsetY = window.pageYOffset;
+
+        if (!popup) {
+            console.log("Error: no overlay argument provided to showOverlay().");
+            return;
+        }
 
         if ($popup.length) {
-            $('.popup').removeClass('active');
-            $scope.offsetY = window.pageYOffset;
-
-            $popup.fadeIn(function() {
-                $body.addClass('fixed');
-                $body.css('top', $scope.offsetY);
-                $popup.addClass('active');
-                $menu.addClass('fixed');
-                $foot.addClass('fixed');
-            });
+            overlay = $popup.find('.overlay');
+        } else {
+            console.log("Error: no element found.");
         }
+
+        // set the overlay props
+        TweenLite.set(overlay, {
+            scale:0.5,
+            rotationX:70,
+            autoAlpha:0,
+            x:0,
+            xPercent:-50,
+            yPercent:-50,
+            transformPerspective:600
+        });
+
+        //set the top menu props
+        TweenLite.set($menu, {
+            position: 'fixed',
+            y: -$menu.height()
+        });
+
+        // animation to all popup
+        TweenLite.to($popup, 0.35, {
+            force3D: true,
+            autoAlpha: 1,
+            ease: Linear.easeNone,
+            onComplete: function() {
+                // set body to fixed
+                var isBodyFixed = $body.hasClass('fixed');
+
+                if (!isBodyFixed) {
+                    $body.addClass('fixed');
+                }
+            }
+        });
+
+        // animation to top menu
+        TweenLite.to($menu, 0.35, {
+            delay: 0.5,
+            y: 0
+        });
+
+        // animation to content
+        TweenLite.to(overlay, 0.55, {
+            scale: 1,
+            force3D: true,
+            lazy: true,
+            ease: Back.easeOut.config(1.5),
+            delay: 0.35,
+            autoAlpha:1,
+            rotationX: 0,
+            y: 0,
+            z: 0,
+            onComplete: onComplete
+        });
     };
 
     /**
      * Hides popup.
      * If argument not passed, then hides all popups.
      * @param popup - jQuery selector
+     * @param onComplete - callback function
      */
-    $scope.hidePopup = function(popup) {
+    $scope.hidePopup = function(popup, onComplete) {
         var $popup = $(popup),
             $body  = $('body'),
             $menu  = $('#main-menu'),
-            $foot  = $('#footer'),
-            $win   = $(window);
+            $win   = $(window),
+            overlay;
 
-        if (arguments.length && $popup.length) {
-            $popup.removeClass('active');
+        if ($popup.length) {
+            overlay = $popup.find('.overlay');
         } else {
-            $('.popup').removeClass('active');
+            console.log("Error: no element found.");
         }
 
-        setTimeout(function() {
-            $popup.fadeOut();
-        }, 500);
+        TweenLite.to(overlay, 0.25, {
+            force3D: true,
+            lazy: true,
+            ease: Linear.easeOut,
+            scale: 0.5,
+            rotationX: 70,
+            autoAlpha: 0,
+            x: 0,
+            xPercent: -50,
+            yPercent: -50,
+            transformPerspective: 600,
+            clearProps: 'all',
+            onComplete: onComplete
+        });
 
-        setTimeout(function() {
-            $body.removeClass('fixed');
-            $body.css('top', $scope.offsetY);
-            $menu.removeClass('fixed');
-            $foot.removeClass('fixed');
+        TweenLite.to($popup, 0.35, {
+            delay: 0.25,
+            autoAlpha: 0,
+            clearProps: 'all',
+            ease: Linear.easeNone
+        });
 
-            $win.scrollTop($scope.offsetY);
-        }, 500);
+        $body.removeClass('fixed');
+        $body.css('top', $scope.offsetY);
+
+        $win.scrollTop($scope.offsetY);
     };
 
     $scope.showTooltip = function(text) {
@@ -224,7 +293,28 @@ app.controller('catalogCtrl', ['$scope', '$localStorage', 'uniService', function
                 // show product popup only if we click on it
                 // but not when we try to add to cart or checkout
                 if (isProductItem) {
-                    $scope.showPopup('#product-view');
+                    $scope.showPopup('#product-view', function() {
+                        var rightPanel = $('.right-panel'),
+                            leftPanel  = $('.left-panel');
+
+                        if (rightPanel.length) {
+                            TweenLite.to(rightPanel, 0.55, {
+                                force3D: true,
+                                x: 0,
+                                autoAlpha: 1,
+                                ease: Expo.easeOut
+                            });
+                        }
+
+                        if (leftPanel.length) {
+                            TweenLite.to(leftPanel, 0.55, {
+                                force3D: true,
+                                x: 0,
+                                autoAlpha: 1,
+                                ease: Expo.easeOut
+                            });
+                        }
+                    });
                 }
             } else {
                 $scope.showTooltip('Internal server error.')
@@ -294,6 +384,35 @@ app.controller('productCtrl', ['$scope', 'uniService', function($scope, uniServi
             $scope.product = {};
         }
     }, true);
+
+    // close product popup
+    $scope.closeProduct = function() {
+        $scope.hidePopup('#product-view', function() {
+            var rightPanel = $('.right-panel'),
+                leftPanel  = $('.left-panel');
+
+            if (rightPanel.length) {
+                TweenLite.to(rightPanel, 0.55, {
+                    force3D: true,
+                    x: 200,
+                    autoAlpha: 0,
+                    clearProps: 'all',
+                    ease: Expo.easeOut
+                });
+            }
+
+            if (leftPanel.length) {
+                TweenLite.to(leftPanel, 0.55, {
+                    force3D: true,
+                    x: -200,
+                    autoAlpha: 0,
+                    clearProps: 'all',
+                    ease: Expo.easeOut
+                });
+            }
+        });
+    };
+
 
     /**
      * Add to cart from product page.

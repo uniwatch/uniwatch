@@ -1,6 +1,5 @@
 @import 'dev-mixins';
 
-
 .popup {
 	position: fixed;
 	top: 0;
@@ -14,17 +13,20 @@
 	overflow-y: auto;
 	overflow-x: hidden;
 	background: no-repeat center center;
-	display: none;
+
+	visibility: hidden;
 
 	.background-size(cover);
 
 
 	.popup-content {
 		position: absolute;
-		top: 80px;
+		top: 0;
 		right: 0;
-		bottom: 180px;
+		bottom: 0;
 		left: 0;
-		.perspective(1000px);
+		-webkit-font-smoothing: antialiased;
+
+		.backface-visibility(hidden);
 	}
 }

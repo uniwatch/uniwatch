@@ -19,13 +19,12 @@ class BaseAsset extends AssetBundle
     public $baseUrl = '@web/assets';
     public $js = [
         'js/vendors/angular.min.js',
-//        'js/vendors/angular-route.min.js',
         'js/vendors/jquery.mousewheel.min.js',
         'js/vendors/gsap/TweenMax.min.js',
+        'js/vendors/60fps-scroll.js',
         'js/vendors/gsap/plugins/ScrollToPlugin.min.js',
         'js/vendors/scrollMagic/jquery.scrollmagic.min.js',
         'js/vendors/scrollMagic/jquery.scrollmagic.debug.js',
-//        'js/vendors/SmoothScroll.js',
         'js/vendors/transit.min.js',
         'js/vendors/ngStorage.js',
         'js/app.js',

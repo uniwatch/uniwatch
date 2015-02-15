@@ -125,7 +125,7 @@ BaseAsset::register($this);
 <!--CART-->
 <div id="cart" class="popup" ng-controller="cartCtrl">
     <div class="cart-wrap popup-content" ng-if="storage.cart.length">
-        <div class="cart-products">
+        <div class="cart-products overlay">
             <ul class="cart-products-list">
                 <li class="cart-product-item" ng-repeat="item in storage.cart">
                     <div class="cart-product-image">
@@ -250,7 +250,7 @@ BaseAsset::register($this);
 
 <!--THANK YOU PAGE-->
 <div id="thank-you" class="popup">
-    <div class="thank-you-wrap popup-content">
+    <div class="thank-you-wrap popup-content overlay">
         <div class="popup-inner">
             <h2 class="thank-heading">thank you</h2>
             <div class="thank-body">
@@ -271,13 +271,13 @@ BaseAsset::register($this);
     <div class="product-wrap popup-content">
         <div class="left-panel" ng-if="product.ordered.length">
             <ul class="related-products-list purchased-together">
-                <li class="related-product-item" ng-repeat="related in product.ordered">
+                <li class="related-product-item" ng-repeat="related in product.ordered | limitTo:4">
                     <img class="related-image" data-ng-src="{{related.img}}" alt="{{related.name}}"/>
                 </li>
             </ul>
         </div>
 
-        <div class="middle-panel product-main-view">
+        <div class="middle-panel product-main-view overlay">
             <div class="middle-panel-inner">
                 <div class="product-image">
                     <img data-ng-src="{{product.img}}" alt="product.name"/>
@@ -301,12 +301,12 @@ BaseAsset::register($this);
                 </div>
             </div>
 
-            <span class="close-button" title="Back to catalog" data-ng-click="hidePopup('#product-view')"></span>
+            <span class="close-button" title="Back to catalog" data-ng-click="closeProduct()"></span>
         </div>
 
         <div class="right-panel" ng-if="product.carted.length">
             <ul class="related-products-list added-together">
-                <li class="related-product-item" ng-repeat="related in product.carted">
+                <li class="related-product-item" ng-repeat="related in product.carted | limitTo:4">
                     <img class="related-image" data-ng-src="{{related.img}}" alt="{{related.name}}"/>
                 </li>
             </ul>

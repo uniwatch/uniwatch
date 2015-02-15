@@ -75,6 +75,12 @@
 		 -o-transition: @transition;
 }
 
+.backface-visibility(@visibility){
+	-webkit-backface-visibility: @visibility;
+	-moz-backface-visibility: @visibility;
+	backface-visibility: @visibility;
+}
+
 .clearfix {
 	zoom: 1;
 	&:before, &:after {

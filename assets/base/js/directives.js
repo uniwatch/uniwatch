@@ -7,29 +7,14 @@ app.directive('initPage', function() {
         restrict: 'A',
         link: function($scope) {
 
-            //this function used for improve scroll performance;
-            function disableHoverOnScroll () {
-                var body = $('body'),
-                    timer;
-
-                $(window).on('scroll', function () {
-                    clearTimeout(timer);
-
-                    if(!body.hasClass('disable-hover')) {
-                        body.addClass('disable-hover');
-                    }
-
-                    timer = setTimeout(function(){
-                        body.removeClass('disable-hover');
-                    },500);
-                });
-            }
-
             // prevent chrome from scroll to previous position
             function scrollToTop () {
                 setTimeout(function() {
                     // target, duration, options
-                    TweenLite.to(window, 1, {scrollTo:{y:0}});
+                    TweenLite.to(window, 1, {
+                        force3D: true,
+                        scrollTo:{ y:0 }
+                    });
                 }, 400);
             }
 
@@ -77,7 +62,7 @@ app.directive('initPage', function() {
             $(function() {
                 //TODO: add site preloader
                 scrollToTop();
-                disableHoverOnScroll();
+                //disableHoverOnScroll();
                 initScrollPlugin();
 
                 //TODO: add cross-browser smooth scrolling
