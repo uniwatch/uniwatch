@@ -6,13 +6,29 @@
 	background: url('/images/bg/cart_bg.jpg') no-repeat center center;
 	.background-size(cover);
 
-	.cart-wrap {
-		& > div {
+	.cart-wrap.popup-content {
+		.popup-inner {
+			position: absolute;
+			top: 0;
+			left: 0;
+			right: 0;
+			bottom: 0;
 			width: 1000px;
 			margin: 0 auto;
 		}
 
-		.cart-products {
+		.cart-products.overlay {
+			position: absolute;
+			top: 45%;
+			left: 50%;
+			height: 600px;
+			overflow: hidden;
+			overflow-y: auto;
+			width: 100%;
+
+			@transform: translate(-50%, -50%);
+			.transform(@transform);
+
 			ul.cart-products-list {
 				list-style: none;
 				margin: 0;
@@ -121,12 +137,19 @@
 		}
 
 		.cart-total {
+			position: absolute;
 			@text-color: #4b4b4b;
+			left: 50%;
+			opacity: 0;
+			bottom: 15%;
 
 			width: 850px;
 			background-color: #fff;
 			border-radius: 3px;
-			margin: 30px auto 0 auto;
+
+			.translateX(-20%);
+
+
 			.total-count, .total-price {
 				padding: 0 10px 0 10px;
 				.clearfix();
@@ -152,9 +175,11 @@
 				color: @text-color;
 			}
 			.total-count {
-				>div {
+				> div {
 					border-bottom: 1px solid grey;
+					padding: 5px;
 				}
+
 				span.text, span.number {
 					font-size: 24px;
 				}
@@ -167,6 +192,13 @@
 		}
 
 		.cart-controls {
+			position: absolute;
+			bottom: 8%;
+			opacity: 0;
+			left: 50%;
+			width: 1000px;
+			.translateX(-80%);
+
 			text-align: center;
 			margin-top: 20px;
 
@@ -188,6 +220,51 @@
 					&:hover {
 						background-image: url('/images/icons/proceed_checkout_hover.png');
 					}
+				}
+			}
+		}
+
+		.no-items {
+			position: absolute;
+			top: 50%;
+			left: 50%;
+
+			width: 500px;
+
+			text-align: center;
+			font-family: 'Corbel', sans-serif;
+
+			opacity: 0;
+			
+			@transform: translate(-50%, -50%);
+			.transform(@transform);
+
+			.popup-inner {
+				padding: 20px;
+				background-color: #fff;
+				border-radius: 4px;
+
+				-webkit-font-smoothing: antialiased;
+			}
+			h4.heading {
+				text-transform: uppercase;
+				font-size: 30px;
+				font-weight: bold;
+			}
+			.content {
+				p.text {
+					font-size: 20px;
+				}
+			}
+			.controls {
+				margin-top: 20px;
+				.back-to-catalog {
+					display: inline-block;
+					width: 280px;
+					height: 48px;
+					cursor: pointer;
+					background: url('/images/icons/continue_shopping.png') no-repeat center center;
+					.background-size(cover);
 				}
 			}
 		}

@@ -125,45 +125,59 @@ BaseAsset::register($this);
 <!--CART-->
 <div id="cart" class="popup" ng-controller="cartCtrl">
     <div class="cart-wrap popup-content" ng-if="storage.cart.length">
-        <div class="cart-products overlay">
-            <ul class="cart-products-list">
-                <li class="cart-product-item" ng-repeat="item in storage.cart">
-                    <div class="cart-product-image">
-                        <img data-ng-src="{{item.img}}" alt=""/>
-                    </div>
-                    <div class="cart-product-body">
-                        <div class="body-wrap">
-                            <div class="name">{{item.name}}</div>
-                            <div class="count">
-                                <label><input type="number" ng-model="item.count" ng-required pattern="[0-9]"/></label>
-                            </div>
-                            <div class="price">{{item.price * item.count | currency}}</div>
+        <div class="popup-inner">
+            <div class="cart-products overlay">
+                <ul class="cart-products-list">
+                    <li class="cart-product-item" ng-repeat="item in storage.cart">
+                        <div class="cart-product-image">
+                            <img data-ng-src="{{item.img}}" alt=""/>
                         </div>
-                    </div>
-                    <span class="delete" ng-click="removeItem($index)"></span>
-                </li>
-            </ul>
-        </div>
-
-        <div class="cart-total">
-            <div class="total-count">
-                <div class="text-wrap"><span class="text">Total items</span></div>
-                <div class="number-wrap"><span class="number">{{total().count}}</span></div>
+                        <div class="cart-product-body">
+                            <div class="body-wrap">
+                                <div class="name">{{item.name}}</div>
+                                <div class="count">
+                                    <label><input type="number" ng-model="item.count" ng-required pattern="[0-9]"/></label>
+                                </div>
+                                <div class="price">{{item.price * item.count | currency}}</div>
+                            </div>
+                        </div>
+                        <span class="delete" ng-click="removeItem($index)"></span>
+                    </li>
+                </ul>
             </div>
-            <div class="total-price">
-                <div class="text-wrap"><span class="text">Order total</span></div>
-                <div class="number-wrap"><span class="number">{{total().price | currency}}</span></div>
-            </div>
-        </div>
 
-        <div class="cart-controls">
-            <span class="back-to-catalog" id="cartClose" ng-click="closeCart()"></span>
-            <span class="checkout" id="cartProceed" ng-click="checkout()"></span>
+            <div class="cart-total" id="cart-total">
+                <div class="total-count">
+                    <div class="text-wrap"><span class="text">Total items</span></div>
+                    <div class="number-wrap"><span class="number">{{total().count}}</span></div>
+                </div>
+                <div class="total-price">
+                    <div class="text-wrap"><span class="text">Order total</span></div>
+                    <div class="number-wrap"><span class="number">{{total().price | currency}}</span></div>
+                </div>
+            </div>
+
+            <div class="cart-controls" id="cart-controls">
+                <span class="back-to-catalog" id="cartClose" ng-click="closeCart()"></span>
+                <span class="checkout" id="cartProceed" ng-click="checkout()"></span>
+            </div>
         </div>
     </div>
 
     <div class="cart-wrap popup-content" ng-if="!storage.cart.length">
-        <h4 class="heading">There is no items in cart.</h4>
+        <div class="no-items overlay">
+            <div class="popup-inner">
+                <h4 class="heading">Cart is empty!</h4>
+                <div class="content">
+                    <p class="text">
+                        We're sorry, but seems like You have not added any products to cart yet.
+                    </p>
+                </div>
+            </div>
+            <div class="controls">
+                <span class="back-to-catalog" id="cartClose" ng-click="closeCart()"></span>
+            </div>
+        </div>
     </div>
 </div>
 <!--CART-->

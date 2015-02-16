@@ -146,14 +146,14 @@ app.controller('appCtrl', ['$scope', '$localStorage', function($scope, $localSto
             xPercent: -50,
             yPercent: -50,
             transformPerspective: 600,
-            clearProps: 'all',
+            //clearProps: 'all',
             onComplete: onComplete
         });
 
         TweenLite.to($popup, 0.35, {
             delay: 0.25,
             autoAlpha: 0,
-            clearProps: 'all',
+            //clearProps: 'all',
             ease: Linear.easeNone
         });
 
@@ -219,14 +219,46 @@ app.controller('appCtrl', ['$scope', '$localStorage', function($scope, $localSto
      * Show cart popup;
      */
     $scope.showCart = function() {
-        $scope.showPopup('#cart');
+        $scope.showPopup('#cart', function() {
+            var total    = $('#cart-total'),
+                controls = $('#cart-controls');
+
+            TweenLite.set(total, {
+                autoAlpha: 0,
+                xPercent: -80,
+                x: 0
+            });
+            TweenLite.set(controls, {
+                autoAlpha: 0,
+                xPercent: -20,
+                x: 0
+            });
+
+            TweenLite.to(total, 0.3, {
+                autoAlpha: 1,
+                delay: 0.3,
+                xPercent: -50,
+                x: 0
+            });
+            TweenLite.to(controls, 0.3, {
+                autoAlpha: 1,
+                delay: 0.5,
+                xPercent: -50,
+                x: 0
+            });
+        });
     };
 
     /**
      * Close cart popup;
      */
     $scope.closeCart = function() {
-        $scope.hidePopup('#cart');
+        $scope.hidePopup('#cart', function(tween) {
+            var total    = $('#cart-total'),
+                controls = $('#cart-controls');
+
+            TweenLite.set([total, controls], {clearProps:"all"});
+        });
     };
 
 }]);
@@ -287,8 +319,8 @@ app.controller('catalogCtrl', ['$scope', '$localStorage', 'uniService', function
 
                 uniService.setProductData($scope.productItem);
 
-                var target = $(event.currentTarget),
-                    isProductItem = target.hasClass('product-item-inner');
+                var target = $(event.target),
+                    isProductItem = !target.hasClass('add-to-cart');
 
                 // show product popup only if we click on it
                 // but not when we try to add to cart or checkout
