@@ -19,6 +19,13 @@ app.factory('uniService', ['$http', '$q', '$rootScope', '$localStorage', functio
             requestOptions.params = options.data;
         } else {
             requestOptions.data = options.data;
+
+            requestOptions.transformRequest = function(obj) {
+                var str = [];
+                for(var p in obj)
+                    str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
+                return str.join("&");
+            }
         }
 
         $http(requestOptions)
@@ -131,13 +138,12 @@ app.factory('uniService', ['$http', '$q', '$rootScope', '$localStorage', functio
             }
         },
 
-        submitCheckout: function(products) {
+        submitCheckout: function(data) {
             return makeRequest({
                 url: 'checkout/proceed',
                 method: 'POST',
-                data: {
-                    products: products
-                }
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8' },
+                data: data
             });
         },
 

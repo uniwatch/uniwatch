@@ -1,17 +1,18 @@
 @import "dev-mixins.less";
 
 #checkout {
-	background-image: url('/images/bg/cart_bg.jpg');
-	background-repeat: no-repeat;
-	background-position: center center;
+	background: url('/images/bg/cart_bg.jpg') no-repeat center center;
+
 	.background-size(cover);
 
 	.checkout-wrap {
 		.checkout-content {
+
 			background-color: #fff;
 			border-radius: 5px;
 			width: 1000px;
 			margin: 0 auto;
+			padding: 1px;
 
 			.checkout-heading {
 				h1.heading {
@@ -36,9 +37,10 @@
 						padding: 0 20px;
 						margin-bottom: 5px;
 						&.bigger-margin {
-							margin-bottom: 10px;
+							margin-bottom: 20px;
 						}
 						&.submit-button {
+							margin-top: 10px;
 							text-align: center;
 						}
 						label {
@@ -59,6 +61,11 @@
 								width: 60%;
 								float: right;
 								outline: none;
+								.transition(border-color 0.3s ease-in-out);
+
+								&.ng-invalid {
+									 border-color: red;
+								}
 							}
 							textarea {
 								position: relative;
@@ -66,6 +73,7 @@
 								float: right;
 								border: 1px solid grey;
 								outline: none;
+								resize: none;
 							}
 						}
 
@@ -73,14 +81,11 @@
 							display: inline-block;
 							width: 250px;
 							height: 30px;
-							margin: 0;
+							margin: 0 0 0 180px;
 							padding: 0;
-							background-color: transparent;
 							border: none;
 							outline: none;
-							background-image: url('/images/icons/place_your_order.png');
-							background-repeat: no-repeat;
-							background-position: center center;
+							background: transparent url('/images/icons/place_your_order.png') no-repeat center center;
 							.background-size(cover);
 
 							&:hover {
@@ -91,6 +96,7 @@
 				}
 				.order-details {
 					.details-heading {
+						margin-bottom: 20px;
 						h3.heading {
 							margin-top: 0;
 							text-align: left;
@@ -108,6 +114,7 @@
 							width: 100%;
 							height: 90px;
 							border-bottom: 1px solid grey;
+							padding: 5px;
 							.clearfix();
 
 							.item-image {
@@ -143,12 +150,18 @@
 										text-transform: uppercase;
 										font-family: 'kokilaregular', sans-serif;
 										font-size: 14px;
+										width: 50%;
+										text-overflow: ellipsis;
 									}
 									.count {
 										label {
 											input {
 												font-family: 'kokilaregular', sans-serif;
-												font-size: 14px;
+												font-size: 16px;
+												text-align: right;
+												width: 50px;
+												line-height: 30px;
+												text-overflow: ellipsis;
 											}
 										}
 									}
@@ -183,7 +196,46 @@
 					}
 				}
 				.order-amount {
+					width: 80%;
+					margin: 0 auto;
+					.total-count, .total-price {
+						padding: 0 10px 0 10px;
+						.clearfix();
 
+						> div {
+							float: left;
+							width: 50%;
+							min-height: 45px;
+
+							&.text-wrap {
+								text-align: left;
+							}
+							&.number-wrap {
+								text-align: right;
+							}
+						}
+					}
+
+					@text-color: #4b4b4b;
+
+					span.text {
+						font-family: 'Corbel', sans-serif;
+						color: @text-color;
+					}
+					span.count {
+						font-family: 'copperplate_gothic_lightRg', sans-serif;
+						color: @text-color;
+						font-weight: bold;
+					}
+					.total-price, .total-count {
+						> div {
+							border-bottom: 1px solid grey;
+							padding: 5px;
+						}
+						span.text, span.count {
+							font-size: 24px;
+						}
+					}
 				}
 			}
 		}

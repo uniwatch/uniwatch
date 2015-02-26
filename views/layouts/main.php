@@ -11,7 +11,7 @@ $this->beginPage();
 <head lang="en">
     <?php $this->head();?>
 </head>
-<body  data-ng-app="app" ng-controller="appCtrl" init-page window-resize>
+<body data-ng-app="app" ng-controller="appCtrl" init-page window-resize>
     <?php $this->beginBody();?>
 
     <div class="main-wrap" role="main">

@@ -124,7 +124,7 @@ BaseAsset::register($this);
 
 <!--CART-->
 <div id="cart" class="popup" ng-controller="cartCtrl">
-    <div class="cart-wrap popup-content" ng-if="storage.cart.length">
+    <div class="cart-wrap popup-content full-cart" ng-if="storage.cart.length">
         <div class="popup-inner">
             <div class="cart-products overlay">
                 <ul class="cart-products-list">
@@ -191,33 +191,68 @@ BaseAsset::register($this);
             </div>
             <div class="checkout-body">
                 <div class="order-form">
-                    <form action="" method="POST" name="checkoutForm" id="checkoutForm">
+                    <form name="checkoutForm" id="checkoutForm" autocomplete="off">
                         <div class="form-row">
-                            <label class="first-name-text">first name <input type="text" name="firstName" class="first-name"/></label>
+                            <label class="first-name-text">first name
+                                <input type="text" id="firstName"
+                                       name="firstName"
+                                       class="first-name"
+                                       ng-required="true"
+                                       ng-model="data.firstName"/>
+                            </label>
                         </div>
                         <div class="form-row">
-                            <label class="last-name-text">last name <input type="text" name="lastName" class="last-name"/></label>
+                            <label class="last-name-text">last name
+                                <input type="text" id="lastName"
+                                       name="lastName"
+                                       class="last-name"
+                                       ng-required="true"
+                                       ng-model="data.lastName"/>
+                            </label>
                         </div>
                         <div class="form-row">
-                            <label class="phone-text">phone <input type="text" name="phone" class="phone"/></label>
+                            <label class="email-text">email
+                                <input type="email" id="email"
+                                       name="email"
+                                       class="email"
+                                       ng-required="true"
+                                       ng-model="data.email"/>
+                            </label>
                         </div>
                         <div class="form-row">
-                            <label class="email-text">email <input type="text" name="email" class="email"/></label>
+                            <label class="city-text">city
+                                <input type="text" name="city"
+                                       id="city"
+                                       class="city"
+                                       ng-model="data.city"/>
+                            </label>
                         </div>
                         <div class="form-row">
-                            <label class="city-text">city <input type="text" name="city" class="city"/></label>
-                        </div>
-                        <div class="form-row">
-                            <label class="address-text">address <input type="text" name="address" class="address"/></label>
+                            <label class="address-text">address
+                                <input type="text" name="address"
+                                       id="address"
+                                       class="address"
+                                       ng-model="data.address"/>
+                            </label>
                         </div>
                         <div class="form-row bigger-margin">
-                            <label class="phone-text">phone <input type="text" name="phone" class="phone"/></label>
+                            <label class="phone-text">phone
+                                <input type="text" name="phone"
+                                       id="phone"
+                                       class="phone"
+                                       ng-model="data.phone"/>
+                            </label>
                         </div>
                         <div class="form-row">
-                            <label class="comment-text">comment <textarea name="comment" class="comment" cols="30" rows="10"></textarea></label>
+                            <label class="comment-text">comment
+                                <textarea name="comment" class="comment"
+                                          id="comment"
+                                          cols="30" rows="10"
+                                          ng-model="data.comment"></textarea>
+                            </label>
                         </div>
                         <div class="form-row submit-button">
-                            <button type="button" id="submitOrder" ng-click="proceedCheckout()"></button>
+                            <button type="button" id="submitOrder" ng-disabled="!checkoutForm.$valid" ng-click="proceedCheckout($event)"></button>
                         </div>
                     </form>
                 </div>
@@ -246,12 +281,20 @@ BaseAsset::register($this);
                     </div>
                     <div class="order-amount">
                         <div class="total-count">
-                            <span class="text"></span>
-                            <span class="count"></span>
+                            <div class="text-wrap">
+                                <span class="text">Total items:</span>
+                            </div>
+                            <div class="number-wrap">
+                                <span class="count">{{total().count}}</span>
+                            </div>
                         </div>
                         <div class="total-price">
-                            <span class="text"></span>
-                            <span class="count"></span>
+                            <div class="text-wrap">
+                                <span class="text">Order total:</span>
+                            </div>
+                            <div class="number-wrap">
+                                <span class="count">{{total().price | currency}}</span>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -330,33 +373,3 @@ BaseAsset::register($this);
 
 <div class="loader" id="loader"></div>
 <div id="tooltip"></div>
-
-<span class="button" style="position: fixed; top: 20px; right: 20px; color: red" ng-click="showThankYou()">TOGGLE ACTIVE</span>
-
-<!--<script>-->
-<!--    var toggle = true;-->
-<!--    function toggleActive() {-->
-<!--//        var block = $('.middle-panel');-->
-<!--        var block = $('#product-view');-->
-<!--        if (toggle) {-->
-<!--            block.addClass('active');-->
-<!--//            block.transition({-->
-<!--//                perspective: '900px',-->
-<!--//                rotateX: '45deg',-->
-<!--//                x: '-50%',-->
-<!--//                y: '-50%',-->
-<!--//                scale: ['1.7', '1.7']-->
-<!--//            });-->
-<!--        } else {-->
-<!--            block.removeClass('active');-->
-<!--//            block.transition({-->
-<!--//                perspective: '900px',-->
-<!--//                rotateX: '0deg',-->
-<!--//                x: '-50%',-->
-<!--//                y: '-50%',-->
-<!--//                scale: ['1', '1']-->
-<!--//            });-->
-<!--        }-->
-<!--        toggle = !toggle-->
-<!--    }-->
-<!--//<!--</script>-->

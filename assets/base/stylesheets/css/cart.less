@@ -7,14 +7,17 @@
 	.background-size(cover);
 
 	.cart-wrap.popup-content {
-		.popup-inner {
-			position: absolute;
-			top: 0;
-			left: 0;
-			right: 0;
-			bottom: 0;
-			width: 1000px;
-			margin: 0 auto;
+
+		&.full-cart {
+			.popup-inner {
+				position: absolute;
+				top: 0;
+				left: 0;
+				right: 0;
+				bottom: 0;
+				width: 1000px;
+				margin: 0 auto;
+			}
 		}
 
 		.cart-products.overlay {
@@ -114,11 +117,12 @@
 							}
 							.count {
 								width: 20%;
+
 								input {
 									font-family: 'kokilaregular', sans-serif;
 									font-size: 29px;
 									font-weight: normal;
-									width: 40px;
+									width: 60px;
 									text-align: right;
 									padding: 0 5px;
 								}
@@ -153,7 +157,7 @@
 			.total-count, .total-price {
 				padding: 0 10px 0 10px;
 				.clearfix();
-				>div {
+				> div {
 					float: left;
 					width: 50%;
 					min-height: 45px;

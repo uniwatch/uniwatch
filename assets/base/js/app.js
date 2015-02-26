@@ -7,7 +7,7 @@ var app = angular.module('app', ['app.slider', 'ngStorage']);
 
 
 
-app.controller('appCtrl', ['$scope', '$localStorage', function($scope, $localStorage) {
+app.controller('appCtrl', ['$scope', '$localStorage', '$http', function($scope, $localStorage, $http) {
     /**
      * Used to prevent double animation execution;
      * true if animation is running
@@ -41,9 +41,10 @@ app.controller('appCtrl', ['$scope', '$localStorage', function($scope, $localSto
     /**
      * Shows popup.
      * @param popup - jQuery selector
+     * @param isHeaderFixed
      * @param onComplete
      */
-    $scope.showPopup = function(popup, onComplete) {
+    $scope.showPopup = function(popup, isHeaderFixed, onComplete) {
         var $body = $('body'),
             $menu = $('#main-menu');
 
@@ -75,10 +76,10 @@ app.controller('appCtrl', ['$scope', '$localStorage', function($scope, $localSto
         });
 
         //set the top menu props
-        TweenLite.set($menu, {
-            position: 'fixed',
-            y: -$menu.height()
-        });
+        //TweenLite.set($menu, {
+        //    position: 'fixed',
+        //    y: -$menu.height()
+        //});
 
         // animation to all popup
         TweenLite.to($popup, 0.35, {
@@ -120,9 +121,10 @@ app.controller('appCtrl', ['$scope', '$localStorage', function($scope, $localSto
      * Hides popup.
      * If argument not passed, then hides all popups.
      * @param popup - jQuery selector
+     * @param isAnotherPopup - flag that tell that we closing popup because of another popup opened.
      * @param onComplete - callback function
      */
-    $scope.hidePopup = function(popup, onComplete) {
+    $scope.hidePopup = function(popup, isAnotherPopup, onComplete) {
         var $popup = $(popup),
             $body  = $('body'),
             $menu  = $('#main-menu'),
@@ -181,6 +183,8 @@ app.controller('appCtrl', ['$scope', '$localStorage', function($scope, $localSto
     };
 
     $scope.showThankYou = function() {
+        $scope.showPopup('#thank-you', false);
+
         var $popup = $('#thank-you'),
             $body = $('body');
 
@@ -219,7 +223,7 @@ app.controller('appCtrl', ['$scope', '$localStorage', function($scope, $localSto
      * Show cart popup;
      */
     $scope.showCart = function() {
-        $scope.showPopup('#cart', function() {
+        $scope.showPopup('#cart', true, function() {
             var total    = $('#cart-total'),
                 controls = $('#cart-controls');
 
@@ -325,7 +329,7 @@ app.controller('catalogCtrl', ['$scope', '$localStorage', 'uniService', function
                 // show product popup only if we click on it
                 // but not when we try to add to cart or checkout
                 if (isProductItem) {
-                    $scope.showPopup('#product-view', function() {
+                    $scope.showPopup('#product-view', true, function() {
                         var rightPanel = $('.right-panel'),
                             leftPanel  = $('.left-panel');
 
@@ -500,14 +504,29 @@ app.controller('cartCtrl', ['$scope', 'uniService', function ($scope, uniService
     };
 
     $scope.checkout = function() {
-        $scope.showPopup('#checkout');
+        $scope.showPopup('#checkout', true, function() {
+            $scope.hidePopup('#cart')
+        });
 
         uniService.setCheckoutData($scope.cart);
     };
 }]);
 
-app.controller('checkoutCtrl', ['$scope', 'uniService', function($scope, uniService) {
+app.controller('checkoutCtrl', ['$scope', 'uniService', '$http', function($scope, uniService, $http) {
     $scope.checkout = [];
+
+    // default checkout form values
+    $scope.data = {
+        lastName  : '',
+        firstName : '',
+        email     : '',
+        phone     : '',
+        address   : '',
+        city      : '',
+        comment   : ''
+    };
+
+    $scope.originData = angular.copy($scope.data);
 
     $scope.$watch(function() {return uniService.getCheckoutData()}, function(newVal, oldVal) {
         if (newVal != null) {
@@ -515,14 +534,41 @@ app.controller('checkoutCtrl', ['$scope', 'uniService', function($scope, uniServ
         }
     });
 
-    $scope.proceedCheckout = function () {
-        uniService.submitCheckout($scope.checkout).then(function(response) {
-            console.log(response);
+    $scope.proceedCheckout = function (event) {
+        event.preventDefault();
+        var form = $('#checkoutForm'),
+            amount = uniService.cartTotals($scope.checkout).price;
+
+        var data = {
+            bill_lname: $scope.lastName,
+            bill_fname: $scope.firstName,
+            bill_email: $scope.email,
+            amount    : amount,
+            products  : JSON.stringify($scope.checkout)
+        };
+
+
+        uniService.submitCheckout(data).then(function(response) {
+            if (response == 'true') {
+                // clear some variables
+                $scope.checkout = [];
+                $scope.storage.cart = [];
+
+                // clear form data
+                $scope.data = angular.copy($scope.originData);
+                $scope.checkoutForm.$setPristine();
+
+                $scope.showThankYou();
+
+                //setTimeout(function() {
+                //    $scope.hidePopup();
+                //}, )
+            }
         });
     };
 
     $scope.total = function() {
-
+        return uniService.cartTotals($scope.checkout);
     };
 
     $scope.deleteItem = function() {
